@@ -1,4 +1,4 @@
-package clasesDAO;
+package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 import gestoresDAO.DataBaseConnection;
 
-public class TransaccionDAO {
+public class TransaccionDAOJDBC implements TransaccionDAO {
 	
 	public void añadirDesc(String resumen, String fyh) {
 		Connection con=null;

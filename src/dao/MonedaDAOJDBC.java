@@ -1,4 +1,4 @@
-package clasesDAO;
+package dao;
 import modelos.Moneda;
 import java.util.ArrayList;
 import gestoresDAO.DataBaseConnection;
@@ -9,7 +9,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.sql.ResultSet;
 
-public class MonedaDAO {
+public class MonedaDAOJDBC implements MonedaDAO{
     
     // Método para guardar una moneda en la base de datos
     public int guardarMoneda(Moneda moneda) {

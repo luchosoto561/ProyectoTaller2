@@ -1,17 +1,17 @@
 package gestoresDAO;
-import clasesDAO.*;
+import dao.*;
 /*esta clase retorna instancias de las clases DAO*/
 public class FactoryDAO {
-	public static MonedaDAO getMonedaDAO() {
-		return new MonedaDAO();
+	public static MonedaDAOJDBC getMonedaDAO() {
+		return new MonedaDAOJDBC();
 	}
-	public static ActivoCriptoDAO getActivoCriptoDAO() {
-		return new ActivoCriptoDAO();
+	public static ActivoCriptoDAOJDBC getActivoCriptoDAO() {
+		return new ActivoCriptoDAOJDBC();
 	}
-	public static ActivoFiatDAO getActivoFiatDAO() {
-		return new ActivoFiatDAO();
+	public static ActivoFiatDAOJDBC getActivoFiatDAO() {
+		return new ActivoFiatDAOJDBC();
 	}	
-	public static TransaccionDAO getTransaccionDAO() {
-		return new TransaccionDAO();
+	public static TransaccionDAOJDBC getTransaccionDAO() {
+		return new TransaccionDAOJDBC();
 	}
 }

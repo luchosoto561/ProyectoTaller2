@@ -1,4 +1,4 @@
-package clasesDAO;
+package dao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,22 +11,21 @@ import java.util.List;
 import gestoresDAO.DataBaseConnection;
 import modelos.Activo;
 
-public class ActivoFiatDAO {
+public class ActivoFiatDAOJDBC implements ActivoFiatDAO{
 	
-	public void GenerarActivo(double cantidad, String nomenclatura) {
+	public void generarActivoFiat(double cantidad, String nomenclatura) {
 		Connection con=null;
 		try {
 		con=DataBaseConnection.getInstancia().getConexion();
-		Statement st = con.createStatement();
 		
-		String sql = "UPDATE ActivoFiat SET cantidad = cantidad WHERE nomenclatura = nomenclatura";
+		String sql = "INSERT INTO ActivoFiat (cantidad, nomenclatura) VALUES (?, ?)";
 		PreparedStatement ust = con.prepareStatement(sql);
         ust.setDouble(1, cantidad);
         ust.setString(2, nomenclatura);
-		st.executeUpdate(sql);
+        
+        ust.executeUpdate();  
+        ust.close();
 		
-		
-		st.close();
 		} catch (SQLException e) {
 		System.out.println("no se pudo conectar a la BD");
 		}finally {

@@ -10,7 +10,7 @@ import gestoresDAO.DataBaseConnection;
 import gestoresDAO.FactoryDAO;
 import java.util.List;
 import comparators.*;
-import clasesDAO.*;
+import dao.*;
 
 public class Principal {
 	public static void main(String[] args) throws SQLException {
@@ -109,7 +109,7 @@ public class Principal {
          
          if ("si".equals(confirmacion)) {
         	 Moneda moneda = new Moneda(tipo, nombre, nomenclatura, valorDolar, stock, volatilidad);
-        	 MonedaDAO mdao = new MonedaDAO();
+        	 MonedaDAOJDBC mdao = new MonedaDAOJDBC();
         	 mdao.guardarMoneda(moneda);/*SE GUARDA LA MONEDA EN LA BASE DE DATOS*/
          }
          
@@ -166,7 +166,7 @@ public class Principal {
             System.out.println("2. Valor en Dólar");
             String opcion = scanner.nextLine();
             
-            MonedaDAO mdao = FactoryDAO.getMonedaDAO();
+            MonedaDAOJDBC mdao = FactoryDAO.getMonedaDAO();
             List<Moneda> lmoneda = mdao.listarMonedas();/*tengo la lista de la base de datos*/
             // Asigna el criterio según la opción seleccionada
             if (opcion.equals("1")) {
@@ -189,7 +189,7 @@ public class Principal {
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
     private static void generarStock() {
         /*de manera aleatoria genera una cantidad de monedas disponibles para todos los usuarios de las billeteras*/
-    	MonedaDAO moneda = FactoryDAO.getMonedaDAO();
+    	MonedaDAOJDBC moneda = FactoryDAO.getMonedaDAO();
     	moneda.generarStock();
     }
 /*-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -199,13 +199,13 @@ public class Principal {
         String criterio = "";
 
         // Pide al usuario que elija un criterio de ordenación válido
-        while (!(criterio.equalsIgnoreCase("nomenclatura") || !(criterio.equalsIgnoreCase("cantidad")))) {
+        while (!(criterio.equalsIgnoreCase("nomenclatura") || criterio.equalsIgnoreCase("cantidad"))) {
             System.out.println("Seleccione el criterio para listar las monedas:");
             System.out.println("1. nomenclatura");
             System.out.println("2. cantidad");
             String opcion = scanner.nextLine();
             
-            MonedaDAO mdao = FactoryDAO.getMonedaDAO();
+            MonedaDAOJDBC mdao = FactoryDAO.getMonedaDAO();
             List<Moneda> lmoneda = mdao.listarMonedas();/*tengo la lista con todas las monedas de la base de datos*/
             // Asigna el criterio según la opción seleccionada
             if (opcion.equals("1")) {
@@ -240,7 +240,7 @@ public class Principal {
 		
 		/*chequeo si existe la nomenclatura en la base de datos, me fijo que tipo de moneda es*/
 		boolean existe = false;
-		MonedaDAO monedao = FactoryDAO.getMonedaDAO();
+		MonedaDAOJDBC monedao = FactoryDAO.getMonedaDAO();
 		List<Moneda> lista = monedao.listarMonedas();
 		String tipo = " ";/*la utilizo para ver si lo mando a la tabla de cripto o de fiat*/
 		for (Moneda moneda : lista) {
@@ -266,18 +266,17 @@ public class Principal {
 			
 			
 			/*si el tipo es cripto lo guardamos en la base de datos de cripto, si el tipo es fiat lo guardamos en la base de datos de fiat*/
-			if (answer.equals("Si")) {
+			if (answer.equals("si")) {
 				if(tipo.equals("cripto")) {
 					
-					ActivoCriptoDAO acd = FactoryDAO.getActivoCriptoDAO();/*tengo instancia del activoCriptoDAO*/
-					acd.generarActivo(cantidad, nomenclatura);/*genero el activo y lo guardo en la base de datos en la tabla de ActivoCripto*/
+					ActivoCriptoDAOJDBC acd = FactoryDAO.getActivoCriptoDAO();/*tengo instancia del activoCriptoDAO*/
+					acd.generarActivoCripto(cantidad, nomenclatura);/*genero el activo y lo guardo en la base de datos en la tabla de ActivoCripto*/
 					System.out.println("se guardo el activoCripto con exito en la base de datos");
 				}
 				else {
-					ActivoFiatDAO  afd = FactoryDAO.getActivoFiatDAO();/*tengo instancia del activoFiatDAO*/
-					afd.GenerarActivo(cantidad, nomenclatura);/*genero el activo y lo guardo en la base de datos en la tabla de ActivoFiat*/
-				
-					System.out.println("se guardo el activo cripto con exito en la base de datos");
+					ActivoFiatDAOJDBC  afd = FactoryDAO.getActivoFiatDAO();/*tengo instancia del activoFiatDAO*/
+					afd.generarActivoFiat(cantidad, nomenclatura);/*genero el activo y lo guardo en la base de datos en la tabla de ActivoFiat*/
+				    System.out.println("se guardo el activoaFiat con exito en la base de datos");
 				}
 			}
 			else System.out.println("Operación Cancelada");    
@@ -294,16 +293,16 @@ public class Principal {
         String criterio = "";
 
         // Pide al usuario que elija un criterio de ordenación válido
-        while (!(criterio.equalsIgnoreCase("nomenclatura") || !(criterio.equalsIgnoreCase("cantidad")))) {
+        while (!(criterio.equalsIgnoreCase("nomenclatura") || criterio.equalsIgnoreCase("cantidad"))) {
             System.out.println("Seleccione el criterio para listar los activos:");
             System.out.println("1. nomenclatura");
             System.out.println("2. cantidad");
             String opcion = scanner.nextLine();
             
-            ActivoCriptoDAO acdao = FactoryDAO.getActivoCriptoDAO();
+            ActivoCriptoDAOJDBC acdao = FactoryDAO.getActivoCriptoDAO();
             List<Activo> lactivoCripto = acdao.listarActivoCripto();/*tengo la lista con todos los activos cripto de la base de datos*/
             
-            ActivoFiatDAO afdao = FactoryDAO.getActivoFiatDAO();
+            ActivoFiatDAOJDBC afdao = FactoryDAO.getActivoFiatDAO();
             List<Activo> lactivoFiat =  afdao.listarActivoFiat();/*tengo la lista con todos los activos fiat de la base de datos*/
             lactivoCripto.addAll(lactivoFiat);/*meto todo en la lista de activoCripto*/
             // Asigna el criterio según la opción seleccionada
@@ -328,10 +327,10 @@ public class Principal {
 /*----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------*/
     private static void comprarCriptomoneda() { 
     	Scanner sc = new Scanner(System.in); 
-		MonedaDAO monedadb = FactoryDAO.getMonedaDAO();
-		ActivoCriptoDAO activoCriptoDAO = FactoryDAO.getActivoCriptoDAO();
-		ActivoFiatDAO activoFiatDAO = FactoryDAO.getActivoFiatDAO();
-		TransaccionDAO trans = FactoryDAO.getTransaccionDAO();
+		MonedaDAOJDBC monedadb = FactoryDAO.getMonedaDAO();
+		ActivoCriptoDAOJDBC activoCriptoDAO = FactoryDAO.getActivoCriptoDAO();
+		ActivoFiatDAOJDBC activoFiatDAO = FactoryDAO.getActivoFiatDAO();
+		TransaccionDAOJDBC trans = FactoryDAO.getTransaccionDAO();
 		System.out.println("Ingrese la nomenclatura de la criptomoneda a comprar: ");
 		String nomencripto = sc.nextLine();
 		System.out.println("ingrese la cantidad de la moneda que queres comprar");
@@ -398,7 +397,7 @@ public class Principal {
 				    else {
 				    	/*tengo que crear el activoCripto, guardarlo en la base de datos y restarle al activo fiat*/
 				    	activoFiatDAO.sumarActivoFiat(-1*dineroaPagar, nomenFiat);
-				    	activoCriptoDAO.generarActivo(cantcripto, nomencripto);
+				    	activoCriptoDAO.generarActivoCripto(cantcripto, nomencripto);
 				    	/*tengo que aniadir la descripcion a transaccion y agregar la transaccion a la base de datos*/
 				    }
 				    /*tengo que aniadir la descripcion a transaccion y agregar la transaccion a la base de datos*/
@@ -427,7 +426,7 @@ public class Principal {
     
     /*tengo que entregar la cantidad de moneda fiat que se tiene que pagar para obtener cantCripto*/
     private static double convertir(double cantCripto, Moneda cripto, String nomenFiat) {
-    	MonedaDAO monedadb = FactoryDAO.getMonedaDAO(); 
+    	MonedaDAOJDBC monedadb = FactoryDAO.getMonedaDAO(); 
     	List<Moneda> lista = monedadb.listarMonedas();
         double valorFD = 0; 
         for (Moneda moneda : lista) {
@@ -445,9 +444,9 @@ public class Principal {
     private static void realizarSwap() {
     	
 		Scanner sc = new Scanner(System.in); 
-		MonedaDAO monedadb = FactoryDAO.getMonedaDAO();
-		ActivoCriptoDAO activodb = FactoryDAO.getActivoCriptoDAO();
-		TransaccionDAO trandb = FactoryDAO.getTransaccionDAO();
+		MonedaDAOJDBC monedadb = FactoryDAO.getMonedaDAO();
+		ActivoCriptoDAOJDBC activodb = FactoryDAO.getActivoCriptoDAO();
+		TransaccionDAOJDBC trandb = FactoryDAO.getTransaccionDAO();
 		
 		/*ingresamos las nomenclaturas de las dos criptomonedas*/
 		System.out.println("Ingrese la nomenclatura de la criptomoneda que quiere adquirir: ");

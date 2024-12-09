@@ -1,4 +1,4 @@
-package clasesDAO;
+package dao;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -6,23 +6,24 @@ import java.util.List;
 import modelos.Activo;
 import gestoresDAO.DataBaseConnection;
 
-public class ActivoCriptoDAO {
+public class ActivoCriptoDAOJDBC implements ActivoCriptoDAO{
 	
-	public ActivoCriptoDAO() {};
+	public ActivoCriptoDAOJDBC() {};
 	
-	public void generarActivo(double cantidad, String nomenclatura) {
+	public void generarActivoCripto(double cantidad, String nomenclatura) {
 		Connection con=null;
 		try {
 		con=DataBaseConnection.getInstancia().getConexion();
-		Statement st = con.createStatement();
 		
-		String sql = "UPDATE ActivoCripto SET cantidad = ? WHERE nomenclatura = ?";
+	
+		String sql = "INSERT INTO ActivoCripto (cantidad, nomenclatura) VALUES (?, ?)";
 		PreparedStatement ust = con.prepareStatement(sql);
         ust.setDouble(1, cantidad);
         ust.setString(2, nomenclatura);
-		st.executeUpdate(sql);
-		
-		st.close();
+        
+        ust.executeUpdate();  
+        ust.close();
+        
 		} catch (SQLException e) {
 		System.out.println("no se pudo conectar a la BD");
 		}finally {
