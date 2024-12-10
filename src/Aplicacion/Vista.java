@@ -1,65 +1,86 @@
-package Aplicacion;
-
 import javax.swing.*;
+import java.awt.*;
 
-
+@SuppressWarnings("serial")
 public class Vista extends JFrame {
-	/*todos los pantallasos como atributo*/
-	private PanelPrincipal principal;
-	private PanelRegistro registro;
+	//todos los paneles como atributo
+	private PanelLogIn principal;
+	private PanelSignUp registro;
 	private PanelActivos activos;
 	private PanelMisOperaciones operaciones;
 	private PanelCotizaciones cotizaciones;
 	private PanelCompra compra;
 	
+	private JPanel contenedor;
 	
 	public Vista() {
-		setTitle("Villetera Virtual");
-    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    	setLayout(null);
-    	setSize(500,400);
-    	setLocationRelativeTo(null);
-		/*inicio todos los paneles aca porque despues cada vez que se toque el boton puede ser que se cambie la informacion pro ejemplo en el compra pero no es que se va creando una nueva instancia como si pasaria si se coloca en el listener*/
+		setTitle("BILLETERA VIRTUAL");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setResizable(false);
+        setLayout(null);
+        setSize(600, 500);
+        setLocationRelativeTo(null);
+        getContentPane().setBackground(new Color(222, 184, 135));
+
+     // Configurar el contenedor principal con CardLayout
+        contenedor = new JPanel(new CardLayout());
+        contenedor.setBounds(0, 0, 600, 500); // Ocupa toda la ventana
+        add(contenedor);
+
+        // Inicializar paneles
+        principal = new PanelLogIn();
+        registro = new PanelSignUp();
+        activos = new PanelActivos();
+        operaciones = new PanelMisOperaciones();
+        cotizaciones = new PanelCotizaciones();
+        compra = new PanelCompra();
+
+        // Añadir paneles al contenedor con nombres
+        contenedor.add(principal, "login");
+        contenedor.add(registro, "signup");
+        contenedor.add(activos, "activos");
+        contenedor.add(operaciones, "operaciones");
+        contenedor.add(cotizaciones, "cotizaciones");
+        contenedor.add(compra, "compra");
+
+        setVisible(true);
+        
+        // Mostrar el panel inicial
+        mostrarPanel(principal);
 		
-		principal= new PanelPrincipal();
-		add(principal);
-		principal.setVisible(true);
-		
-		registro = new PanelRegistro();
-		add(registro);
-		activos = new PanelActivos();
-		add(activos);
-		operaciones = new PanelMisOperaciones();
-		add(operaciones);
-		cotizaciones = new PanelCotizaciones();
-		add(cotizaciones);
-		compra = new PanelCompra();
-		add(compra);
-		
-		
-		
-		setVisible(true);/*hago visible el frame*/
-	
 	}/*los creo para que */
-	public PanelPrincipal getPantelPrincipal() {
+	
+	public void mostrarPanel(JPanel panelVisible) {
+	    // Oculta todos los paneles
+	    principal.setVisible(false);
+	    registro.setVisible(false);
+	    activos.setVisible(false);
+	    operaciones.setVisible(false);
+	    cotizaciones.setVisible(false);
+	    compra.setVisible(false);
+
+	    // Muestra el panel especificado
+	    panelVisible.setVisible(true);
+	    
+	}
+	
+	public PanelLogIn getPanelPrincipal() {
 		return principal;
 	}
-	public PanelRegistro getPantelRegistro() {
+	public PanelSignUp getPanelRegistro() {
 		return registro;
 	}
-	public PanelActivos getPantelActivos() {
+	public PanelActivos getPanelActivos() {
 		return activos;
 	}
-	public PanelMisOperaciones getPantelMisOperaciones() {
+	public PanelMisOperaciones getPanelMisOperaciones() {
 		return operaciones;
 	}
-	public PanelCotizaciones getPantelCotizaciones() {
+	public PanelCotizaciones getPanelCotizaciones() {
 		return cotizaciones;
 	}
-	public PanelCompra getPantelCompra() {
+	public PanelCompra getPanelCompra() {
 		return compra;
 	}
 	
-	
-
 }
