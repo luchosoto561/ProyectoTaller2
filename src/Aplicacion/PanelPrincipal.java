@@ -1,7 +1,7 @@
-package Aplicacion;
-
 import javax.swing.*;
+import java.awt.*;
 
+@SuppressWarnings("serial")
 public class PanelPrincipal extends JPanel {
     private JTextField gmail;
     private JButton registrarse;
@@ -11,38 +11,73 @@ public class PanelPrincipal extends JPanel {
     private JButton cierre;
 
     public PanelPrincipal() {
-        // Crear y configurar los componentes
-        setLayout(null); // Usamos un layout nulo para establecer las posiciones manualmente
+        // Configuración general del panel
+        setLayout(null);
+        setBackground(new Color(222, 184, 135)); // Marroncito
 
         // Configurar el título
-        titulo = new JLabel("Panel de login");
-        titulo.setBounds(100, 20, 300, 30);
-        add(titulo);  // Agregar el título al panel
+        titulo = new JLabel("Bienvenido");
+        titulo.setFont(new Font("Arial", Font.BOLD, 30));
+        titulo.setForeground(new Color(40, 40, 40)); // Negro suave
+        titulo.setBounds(200, 50, 200, 30);
+        titulo.setHorizontalAlignment(SwingConstants.CENTER);
+        add(titulo);
 
         // Configurar el campo de Gmail
-        gmail = new JTextField();
-        gmail.setBounds(100, 60, 250, 30);
-        add(gmail);  // Agregar el campo de texto al panel
+        JLabel gmailLabel = new JLabel("Correo Electrónico:");
+        gmailLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        gmailLabel.setBounds(150, 120, 300, 25);
+        gmailLabel.setForeground(new Color(40, 40, 40)); // Negro suave
+        add(gmailLabel);
 
-        // Configurar la contraseña
+        gmail = new JTextField();
+        gmail.setBounds(150, 150, 300, 30);
+        gmail.setFont(new Font("Arial", Font.PLAIN, 18));
+        gmail.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+        add(gmail);
+
+        // Configurar el campo de contraseña
+        JLabel passwordLabel = new JLabel("Contraseña:");
+        passwordLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        passwordLabel.setBounds(150, 200, 300, 25);
+        passwordLabel.setForeground(new Color(40, 40, 40)); // Negro suave
+        add(passwordLabel);
+
         password = new JPasswordField();
-        password.setBounds(100, 100, 250, 30);
-        add(password);  // Agregar el campo de contraseña al panel
+        password.setBounds(150, 230, 300, 30);
+        password.setFont(new Font("Arial", Font.PLAIN, 18));
+        password.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+        add(password);
 
         // Configurar el botón de Login
-        login = new JButton("Login");
-        login.setBounds(100, 140, 100, 30);
-        add(login);  // Agregar el botón de login al panel
+        login = new JButton("Iniciar Sesión");
+        login.setBounds(150, 280, 140, 40);
+        login.setFont(new Font("Arial", Font.BOLD, 18));
+        login.setBackground(new Color(139, 69, 19)); // Marrón oscuro
+        login.setForeground(Color.WHITE);
+        login.setFocusPainted(false);
+        login.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        add(login);
 
         // Configurar el botón de Registrarse
-        registrarse = new JButton("Registrarse");
-        registrarse.setBounds(100, 180, 250, 30);
-        add(registrarse);  // Agregar el botón de registrarse al panel
+        registrarse = new JButton("¿No tienes cuenta?");
+        registrarse.setBounds(310, 280, 140, 40);
+        registrarse.setFont(new Font("Arial", Font.BOLD, 14));
+        registrarse.setBackground(new Color(139, 69, 19)); // Marrón oscuro
+        registrarse.setForeground(Color.WHITE);
+        registrarse.setFocusPainted(false);
+        registrarse.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        add(registrarse);
 
         // Configurar el botón de Cierre
         cierre = new JButton("Cerrar");
-        cierre.setBounds(320, 20, 100, 30);
-        add(cierre);  // Agregar el botón de cierre al panel
+        cierre.setBounds(196, 380, 200, 30);
+        cierre.setFont(new Font("Arial", Font.BOLD, 18));
+        cierre.setBackground(new Color(255, 69, 0)); // Rojo anaranjado
+        cierre.setForeground(Color.WHITE);
+        cierre.setFocusPainted(false);
+        cierre.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        add(cierre);
     }
 
     // Métodos para obtener los valores de los componentes
