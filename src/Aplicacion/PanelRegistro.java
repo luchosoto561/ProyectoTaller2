@@ -1,9 +1,8 @@
-package Aplicacion;
-
 import javax.swing.*;
 import java.awt.*;
 
-public class PanelRegistro extends JPanel {
+@SuppressWarnings("serial")
+public class PanelSignUp extends JPanel {
     private JTextField nombres;
     private JTextField apellidos;
     private JTextField email;
@@ -11,90 +10,107 @@ public class PanelRegistro extends JPanel {
     private JCheckBox aceptarTerminos;
     private JButton registrar;
     private JButton cierre;
-
-    public PanelRegistro() {
+    
+    public PanelSignUp() {
     	// Configuración del panel
-    	setLayout(null); // Usamos un layout nulo para establecer las posiciones manualmente
-
+    	setLayout(null);
+    	setBackground(new Color(222, 184, 135)); // Marroncito
+    	
     	// Configuración del título
-    	JLabel titulo = new JLabel("Registración");
-    	titulo.setFont(new Font("Arial", Font.BOLD, 18));
-    	titulo.setBounds(170, 20, 200, 30);
+    	JLabel titulo = new JLabel("Crea tu cuenta");
+    	titulo.setFont(new Font("Arial", Font.BOLD, 28));
+    	titulo.setBounds(195, 40, 200, 30);
     	add(titulo);
-
+    	
     	// Configuración del campo de Nombres
     	JLabel lblNombres = new JLabel("Nombres:");
-    	lblNombres.setBounds(50, 60, 100, 30);
+    	lblNombres.setBounds(110, 100, 100, 30);
+    	lblNombres.setFont(new Font("Arial", Font.PLAIN, 18));
     	add(lblNombres);
     	nombres = new JTextField();
-    	nombres.setBounds(150, 60, 250, 30);
+    	nombres.setBounds(210, 100, 250, 30);
+    	nombres.setFont(new Font("Arial", Font.PLAIN, 18));
+    	nombres.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
     	add(nombres);
-
+    	
     	// Configuración del campo de Apellidos
     	JLabel lblApellidos = new JLabel("Apellidos:");
-    	lblApellidos.setBounds(50, 100, 100, 30);
+    	lblApellidos.setBounds(110, 140, 100, 30);
+    	lblApellidos.setFont(new Font("Arial", Font.PLAIN, 18));
     	add(lblApellidos);
     	apellidos = new JTextField();
-    	apellidos.setBounds(150, 100, 250, 30);
+    	apellidos.setBounds(210, 140, 250, 30);
+    	apellidos.setFont(new Font("Arial", Font.PLAIN, 18));
+    	apellidos.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
     	add(apellidos);
-
+    	
     	// Configuración del campo de Email
     	JLabel lblEmail = new JLabel("Email:");
-    	lblEmail.setBounds(50, 140, 100, 30);
+    	lblEmail.setBounds(110, 180, 100, 30);
+    	lblEmail.setFont(new Font("Arial", Font.PLAIN, 18));
     	add(lblEmail);
     	email = new JTextField();
-    	email.setBounds(150, 140, 250, 30);
+    	email.setBounds(210, 180, 250, 30);
+    	email.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+    	email.setFont(new Font("Arial", Font.PLAIN, 18));
     	add(email);
-
+    	
     	// Configuración del campo de Contraseña
     	JLabel lblPassword = new JLabel("Contraseña:");
-    	lblPassword.setBounds(50, 180, 100, 30);
+    	lblPassword.setBounds(110, 220, 100, 30);
+    	lblPassword.setFont(new Font("Arial", Font.PLAIN, 18));
     	add(lblPassword);
     	password = new JPasswordField();
-    	password.setBounds(150, 180, 250, 30);
+    	password.setBounds(210, 220, 250, 30);
+    	password.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+    	password.setFont(new Font("Arial", Font.PLAIN, 18));
     	add(password);
-
+    	
     	// Configuración del checkbox para aceptar términos
     	aceptarTerminos = new JCheckBox("Acepto términos y condiciones");
-    	aceptarTerminos.setBounds(150, 220, 250, 30);
+    	aceptarTerminos.setBounds(195, 260, 250, 30);
+    	aceptarTerminos.setBackground(new Color(222, 184, 135)); // Marroncito
     	add(aceptarTerminos);
-
+    	
     	// Configuración del botón de Registrar
     	registrar = new JButton("Registrar");
-    	registrar.setBounds(150, 260, 100, 30);
+    	registrar.setBounds(219, 300, 150, 30);
+    	registrar.setFont(new Font("Arial", Font.BOLD, 18));
+    	registrar.setForeground(Color.WHITE);
+        registrar.setFocusPainted(false);
+        registrar.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+    	registrar.setBackground(new Color(139, 69, 19)); // Marrón oscuro
     	add(registrar);
-
-    	// Configuración del botón de Cierre
-    	cierre = new JButton("Cerrar");
-    	cierre.setBounds(380, 10, 80, 30);
-    	add(cierre);
+    	
+    	// Configurar el botón de Cierre
+        cierre = new JButton("Cerrar");
+        cierre.setBounds(196, 380, 200, 30);
+        cierre.setFont(new Font("Arial", Font.BOLD, 18));
+        cierre.setBackground(new Color(255, 69, 0)); // Rojo anaranjado
+        cierre.setForeground(Color.WHITE);
+        cierre.setFocusPainted(false);
+        cierre.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        add(cierre);
     }
-
     // Métodos para obtener los valores de los campos
     public JTextField getNombres() {
     	return nombres;
     }
-
     public JTextField getApellidos() {
     	return apellidos;
     }
-
     public JTextField getEmail() {
     	return email;
     }
-
     public JPasswordField getPassword() {
     	return password;
     }
-
     public JCheckBox getAceptarTerminos() {
     	return aceptarTerminos;
     }
-
     public JButton getRegistrarButton() {
     	return registrar;
     }
-
     public JButton getCierreButton() {
     	return cierre;
     }
