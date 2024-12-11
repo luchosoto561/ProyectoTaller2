@@ -61,6 +61,7 @@ public class Vista extends JFrame {
 
 	    // Muestra el panel especificado
 	    panelVisible.setVisible(true);
+	    repaint();
 	    
 	}
 	
