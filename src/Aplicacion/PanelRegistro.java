@@ -9,6 +9,7 @@ public class PanelSignUp extends JPanel {
     private JPasswordField password;
     private JCheckBox aceptarTerminos;
     private JButton registrar;
+    private JButton cuenta;
     private JButton cierre;
     
     public PanelSignUp() {
@@ -30,7 +31,10 @@ public class PanelSignUp extends JPanel {
     	nombres = new JTextField();
     	nombres.setBounds(210, 100, 250, 30);
     	nombres.setFont(new Font("Arial", Font.PLAIN, 18));
-    	nombres.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+    	nombres.setBorder(BorderFactory.createCompoundBorder(
+        	    BorderFactory.createLineBorder(new Color(70, 130, 180), 1), // Borde externo
+        	    BorderFactory.createEmptyBorder(5, 10, 5, 10)               // Margen interno
+        	));
     	add(nombres);
     	
     	// Configuración del campo de Apellidos
@@ -41,7 +45,10 @@ public class PanelSignUp extends JPanel {
     	apellidos = new JTextField();
     	apellidos.setBounds(210, 140, 250, 30);
     	apellidos.setFont(new Font("Arial", Font.PLAIN, 18));
-    	apellidos.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+    	apellidos.setBorder(BorderFactory.createCompoundBorder(
+        	    BorderFactory.createLineBorder(new Color(70, 130, 180), 1), // Borde externo
+        	    BorderFactory.createEmptyBorder(5, 10, 5, 10)               // Margen interno
+        	));
     	add(apellidos);
     	
     	// Configuración del campo de Email
@@ -51,7 +58,10 @@ public class PanelSignUp extends JPanel {
     	add(lblEmail);
     	email = new JTextField();
     	email.setBounds(210, 180, 250, 30);
-    	email.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+    	email.setBorder(BorderFactory.createCompoundBorder(
+        	    BorderFactory.createLineBorder(new Color(70, 130, 180), 1), // Borde externo
+        	    BorderFactory.createEmptyBorder(5, 10, 5, 10)               // Margen interno
+        	));
     	email.setFont(new Font("Arial", Font.PLAIN, 18));
     	add(email);
     	
@@ -62,7 +72,10 @@ public class PanelSignUp extends JPanel {
     	add(lblPassword);
     	password = new JPasswordField();
     	password.setBounds(210, 220, 250, 30);
-    	password.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+    	password.setBorder(BorderFactory.createCompoundBorder(
+        	    BorderFactory.createLineBorder(new Color(70, 130, 180), 1), // Borde externo
+        	    BorderFactory.createEmptyBorder(5, 10, 5, 10)               // Margen interno
+        	));
     	password.setFont(new Font("Arial", Font.PLAIN, 18));
     	add(password);
     	
@@ -74,13 +87,22 @@ public class PanelSignUp extends JPanel {
     	
     	// Configuración del botón de Registrar
     	registrar = new JButton("Registrar");
-    	registrar.setBounds(219, 300, 150, 30);
+    	registrar.setBounds(150, 300, 150, 30);
     	registrar.setFont(new Font("Arial", Font.BOLD, 18));
     	registrar.setForeground(Color.WHITE);
         registrar.setFocusPainted(false);
-        registrar.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        registrar.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
     	registrar.setBackground(new Color(139, 69, 19)); // Marrón oscuro
     	add(registrar);
+    	
+    	cuenta = new JButton("Ya tengo cuenta");
+    	cuenta.setBounds(310, 300, 150, 30);
+    	cuenta.setFont(new Font("Arial", Font.BOLD, 17));
+    	cuenta.setForeground(Color.WHITE);
+    	cuenta.setFocusPainted(false);
+    	cuenta.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
+    	cuenta.setBackground(new Color(139, 69, 19)); // Marrón oscuro
+    	add(cuenta);
     	
     	// Configurar el botón de Cierre
         cierre = new JButton("Cerrar");
@@ -89,7 +111,7 @@ public class PanelSignUp extends JPanel {
         cierre.setBackground(new Color(255, 69, 0)); // Rojo anaranjado
         cierre.setForeground(Color.WHITE);
         cierre.setFocusPainted(false);
-        cierre.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        cierre.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(cierre);
     }
     // Métodos para obtener los valores de los campos
@@ -110,6 +132,9 @@ public class PanelSignUp extends JPanel {
     }
     public JButton getRegistrarButton() {
     	return registrar;
+    }
+    public JButton getCuentaButton() {
+    	return cuenta;
     }
     public JButton getCierreButton() {
     	return cierre;
