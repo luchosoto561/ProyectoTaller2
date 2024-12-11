@@ -33,7 +33,10 @@ public class PanelLogIn extends JPanel {
         gmail = new JTextField();
         gmail.setBounds(150, 150, 300, 30);
         gmail.setFont(new Font("Arial", Font.PLAIN, 18));
-        gmail.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+        gmail.setBorder(BorderFactory.createCompoundBorder(
+        	    BorderFactory.createLineBorder(new Color(70, 130, 180), 1), // Borde externo
+        	    BorderFactory.createEmptyBorder(5, 10, 5, 10)               // Margen interno
+        	));
         add(gmail);
 
         // Configurar el campo de contraseña
@@ -46,7 +49,10 @@ public class PanelLogIn extends JPanel {
         password = new JPasswordField();
         password.setBounds(150, 230, 300, 30);
         password.setFont(new Font("Arial", Font.PLAIN, 18));
-        password.setBorder(BorderFactory.createLineBorder(new Color(70, 130, 180), 1));
+        password.setBorder(BorderFactory.createCompoundBorder(
+        	    BorderFactory.createLineBorder(new Color(70, 130, 180), 1), // Borde externo
+        	    BorderFactory.createEmptyBorder(5, 10, 5, 10)               // Margen interno
+        	));
         add(password);
 
         // Configurar el botón de Login
@@ -56,7 +62,7 @@ public class PanelLogIn extends JPanel {
         login.setBackground(new Color(139, 69, 19)); // Marrón oscuro
         login.setForeground(Color.WHITE);
         login.setFocusPainted(false);
-        login.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        login.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(login);
 
         // Configurar el botón de Registrarse
@@ -66,7 +72,7 @@ public class PanelLogIn extends JPanel {
         registrarse.setBackground(new Color(139, 69, 19)); // Marrón oscuro
         registrarse.setForeground(Color.WHITE);
         registrarse.setFocusPainted(false);
-        registrarse.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        registrarse.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(registrarse);
 
         // Configurar el botón de Cierre
@@ -76,7 +82,7 @@ public class PanelLogIn extends JPanel {
         cierre.setBackground(new Color(255, 69, 0)); // Rojo anaranjado
         cierre.setForeground(Color.WHITE);
         cierre.setFocusPainted(false);
-        cierre.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        cierre.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(cierre);
         
        
