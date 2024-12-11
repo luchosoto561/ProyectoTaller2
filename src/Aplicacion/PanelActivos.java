@@ -1,10 +1,9 @@
-package Aplicacion;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
+@SuppressWarnings("serial")
 public class PanelActivos extends JPanel {
-
     private JButton btnCerrarSesion;
     private JButton btnGenerarDatos;
     private JButton btnExportarCSV;
@@ -12,26 +11,38 @@ public class PanelActivos extends JPanel {
     private JButton btnCotizaciones;
     private JLabel lblUsuario;
     private JTable tblCriptos;
+    @SuppressWarnings("unused")
+	private String Usuario;
+    private int num = 0;
 
     public PanelActivos() {
         setLayout(null);
+        setBackground(new Color(222, 184, 135)); // Fondo marroncito
 
-        // Botón cerrar sesión (arriba derecha)
+        
+
+        // Botón cerrar sesión
         btnCerrarSesion = new JButton("Cerrar Sesión");
-        btnCerrarSesion.setBounds(350, 10, 120, 30);
+        btnCerrarSesion.setBounds(420, 10, 150, 30);
+        btnCerrarSesion.setFont(new Font("Arial", Font.BOLD, 18));
+        btnCerrarSesion.setBackground(new Color(255, 69, 0)); // Rojo anaranjado
+        btnCerrarSesion.setForeground(Color.WHITE);
+        btnCerrarSesion.setFocusPainted(false);
+        btnCerrarSesion.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        add(btnCerrarSesion);
         add(btnCerrarSesion);
 
-        // Botón generar datos de prueba (debajo del botón de cerrar sesión)
-        btnGenerarDatos = new JButton("Generar Datos de Prueba");
-        btnGenerarDatos.setBounds(350, 50, 180, 30);
+        // Botón generar datos
+        btnGenerarDatos = new JButton("Generar Datos");
+        btnGenerarDatos.setBounds(420, 55, 150, 30);
+        btnGenerarDatos.setFont(new Font("Arial", Font.BOLD, 14));
+        btnGenerarDatos.setBackground(new Color(139, 69, 19)); // Marrón oscuro
+        btnGenerarDatos.setForeground(Color.WHITE);
+        btnGenerarDatos.setFocusPainted(false);
+        btnGenerarDatos.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
         add(btnGenerarDatos);
 
-        // Texto de usuario (arriba, debajo del botón de cerrar sesión)
-        lblUsuario = new JLabel("Luciano");
-        lblUsuario.setBounds(350, 90, 100, 30);
-        add(lblUsuario);
-
-        // Tabla con tres campos: símbolo, nombre y monto
+        // Tabla de activos
         String[] columnNames = {"Símbolo", "Nombre", "Monto"};
         Object[][] data = {
             {"BTC", "Bitcoin", "0.5"},
@@ -41,33 +52,54 @@ public class PanelActivos extends JPanel {
         DefaultTableModel model = new DefaultTableModel(data, columnNames);
         tblCriptos = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(tblCriptos);
-        scrollPane.setBounds(50, 50, 250, 200);
+        scrollPane.setBounds(20, 75, 380, 300);
+        tblCriptos.setFont(new Font("Arial", Font.BOLD, 14));
+        tblCriptos.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
         add(scrollPane);
-
-        // Botones Cripto y Monto en la parte superior de la tabla
-        JButton btnCripto = new JButton("Cripto");
-        btnCripto.setBounds(50, 10, 80, 30);
-        add(btnCripto);
-
-        JButton btnMonto = new JButton("Monto");
-        btnMonto.setBounds(180, 10, 80, 30);
-        add(btnMonto);
 
         // Botón Exportar como CSV
         btnExportarCSV = new JButton("Exportar como CSV");
-        btnExportarCSV.setBounds(50, 270, 200, 30);
+        btnExportarCSV.setBounds(420, 100, 150, 30);
+        btnExportarCSV.setFont(new Font("Arial", Font.BOLD, 14));
+        btnExportarCSV.setBackground(new Color(139, 69, 19)); // Marrón oscuro
+        btnExportarCSV.setForeground(Color.WHITE);
+        btnExportarCSV.setFocusPainted(false);
+        btnExportarCSV.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
         add(btnExportarCSV);
 
-        // Botones Mis Operaciones y Cotizaciones
+        // Botones de navegación
         btnMisOperaciones = new JButton("Mis Operaciones");
-        btnMisOperaciones.setBounds(50, 310, 150, 30);
+        btnMisOperaciones.setBounds(45, 400, 150, 40);
+        btnMisOperaciones.setFont(new Font("Arial", Font.BOLD, 14));
+        btnMisOperaciones.setBackground(new Color(139, 69, 19)); // Marrón oscuro
+        btnMisOperaciones.setForeground(Color.WHITE);
+        btnMisOperaciones.setFocusPainted(false);
+        btnMisOperaciones.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
         add(btnMisOperaciones);
 
         btnCotizaciones = new JButton("Cotizaciones");
-        btnCotizaciones.setBounds(210, 310, 150, 30);
+        btnCotizaciones.setBounds(215, 400, 150, 40);
+        btnCotizaciones.setFont(new Font("Arial", Font.BOLD, 14));
+        btnCotizaciones.setBackground(new Color(139, 69, 19)); // Marrón oscuro
+        btnCotizaciones.setForeground(Color.WHITE);
+        btnCotizaciones.setFocusPainted(false);
+        btnCotizaciones.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
         add(btnCotizaciones);
     }
 
+    public void nombreUsuario (String Usuario) {
+    	this.Usuario = Usuario;
+    	// Etiqueta para el usuario
+    	if (num != 0) remove (lblUsuario);
+        lblUsuario = new JLabel(("Usuario: " + Usuario));
+        lblUsuario.setFont(new Font("Arial", Font.BOLD, 30));
+        lblUsuario.setForeground(new Color(40, 40, 40)); // Negro suave
+        lblUsuario.setHorizontalAlignment(SwingConstants.CENTER);
+        lblUsuario.setBounds(60, 25, 300, 30);
+        add(lblUsuario);
+        num++;
+    }
+    
     // Métodos get de los atributos
     public JButton getBtnCerrarSesion() {
         return btnCerrarSesion;
