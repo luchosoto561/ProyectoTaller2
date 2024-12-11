@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+@SuppressWarnings("serial")
 public class PanelMisOperaciones extends JPanel {
     private JList<String> listaOperaciones; // Lista para mostrar las operaciones
     private DefaultListModel<String> modeloLista; // Modelo para gestionar los elementos de la lista
