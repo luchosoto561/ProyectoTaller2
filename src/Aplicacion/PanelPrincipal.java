@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 @SuppressWarnings("serial")
-public class PanelPrincipal extends JPanel {
+public class PanelLogIn extends JPanel {
     private JTextField gmail;
     private JButton registrarse;
     private JButton login;
@@ -10,7 +10,7 @@ public class PanelPrincipal extends JPanel {
     private JPasswordField password;
     private JButton cierre;
 
-    public PanelPrincipal() {
+    public PanelLogIn() {
         // Configuración general del panel
         setLayout(null);
         setBackground(new Color(222, 184, 135)); // Marroncito
@@ -78,6 +78,8 @@ public class PanelPrincipal extends JPanel {
         cierre.setFocusPainted(false);
         cierre.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
         add(cierre);
+        
+       
     }
 
     // Métodos para obtener los valores de los componentes
