@@ -28,7 +28,7 @@ public class PanelActivos extends JPanel {
         btnCerrarSesion.setBackground(new Color(255, 69, 0)); // Rojo anaranjado
         btnCerrarSesion.setForeground(Color.WHITE);
         btnCerrarSesion.setFocusPainted(false);
-        btnCerrarSesion.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        btnCerrarSesion.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(btnCerrarSesion);
         add(btnCerrarSesion);
 
@@ -39,7 +39,7 @@ public class PanelActivos extends JPanel {
         btnGenerarDatos.setBackground(new Color(139, 69, 19)); // Marrón oscuro
         btnGenerarDatos.setForeground(Color.WHITE);
         btnGenerarDatos.setFocusPainted(false);
-        btnGenerarDatos.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        btnGenerarDatos.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(btnGenerarDatos);
 
         // Tabla de activos
@@ -64,7 +64,7 @@ public class PanelActivos extends JPanel {
         btnExportarCSV.setBackground(new Color(139, 69, 19)); // Marrón oscuro
         btnExportarCSV.setForeground(Color.WHITE);
         btnExportarCSV.setFocusPainted(false);
-        btnExportarCSV.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        btnExportarCSV.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(btnExportarCSV);
 
         // Botones de navegación
@@ -74,7 +74,7 @@ public class PanelActivos extends JPanel {
         btnMisOperaciones.setBackground(new Color(139, 69, 19)); // Marrón oscuro
         btnMisOperaciones.setForeground(Color.WHITE);
         btnMisOperaciones.setFocusPainted(false);
-        btnMisOperaciones.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        btnMisOperaciones.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(btnMisOperaciones);
 
         btnCotizaciones = new JButton("Cotizaciones");
@@ -83,7 +83,7 @@ public class PanelActivos extends JPanel {
         btnCotizaciones.setBackground(new Color(139, 69, 19)); // Marrón oscuro
         btnCotizaciones.setForeground(Color.WHITE);
         btnCotizaciones.setFocusPainted(false);
-        btnCotizaciones.setBorder(BorderFactory.createLineBorder(new Color(40, 40, 40), 1));
+        btnCotizaciones.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(btnCotizaciones);
     }
 
