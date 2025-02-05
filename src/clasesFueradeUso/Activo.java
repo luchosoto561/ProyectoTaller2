@@ -1,4 +1,4 @@
-package clases;
+package clasesFueradeUso;
 
 /**
  * Esta clase representa un activo que incluye una cantidad de criptomonedas, una criptomoneda especifica

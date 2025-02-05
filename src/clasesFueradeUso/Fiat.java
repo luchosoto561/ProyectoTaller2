@@ -1,4 +1,4 @@
-package clases;
+package clasesFueradeUso;
 
 import java.awt.image.BufferedImage;
 

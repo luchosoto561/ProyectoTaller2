@@ -131,7 +131,7 @@ public class Controlador {
 		    		throw new NoAceptoTerminosException();
 		    	if(modelo.existeGmail(vista.getPanelRegistro().getEmail().getText()))/*si el gmail elegido existe, salta error*/
 					throw new DatosNoValidosException();
-		    	modelo.insertUsuario();/*le tengo que pasar como parametros toda la data*/
+		    	modelo.insertUsuario();/*le tengo que pasar todos los parametros*/
 				modelo.cargarPanelActivos();
 		    	vista.mostrarPanel(vista.getPanelActivos());
 				

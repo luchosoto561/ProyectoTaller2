@@ -1,4 +1,4 @@
-package clases;
+package clasesFueradeUso;
 
 /**
  * Esta clase representa una fecha con dia, mes y anio.
