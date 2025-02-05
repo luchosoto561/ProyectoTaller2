@@ -82,7 +82,6 @@ public class PanelRegistro extends JPanel {
     	add(password);
     	
     	// Configuración del checkbox para aceptar términos
-    	aceptarTerminos = new JCheckBox("Acepto términos y condiciones");
     	aceptarTerminos.setBounds(195, 260, 250, 30);
     	aceptarTerminos.setBackground(new Color(222, 184, 135)); // Marroncito
     	add(aceptarTerminos);
