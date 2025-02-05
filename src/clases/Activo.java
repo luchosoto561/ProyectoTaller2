@@ -1,4 +1,4 @@
-package Proyecto1entregable;
+package clases;
 
 /**
  * Esta clase representa un activo que incluye una cantidad de criptomonedas, una criptomoneda especifica

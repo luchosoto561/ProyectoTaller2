@@ -1,3 +1,5 @@
+package Aplicacion;
+
 import javax.swing.*;
 import java.awt.*;
 @SuppressWarnings("serial")

@@ -1,4 +1,4 @@
-package Proyecto1entregable;
+package clases;
 
 import java.awt.image.BufferedImage;
 

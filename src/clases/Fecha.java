@@ -1,4 +1,4 @@
-package Proyecto1entregable;
+package clases;
 
 /**
  * Esta clase representa una fecha con dia, mes y anio.

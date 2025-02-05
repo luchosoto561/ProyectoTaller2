@@ -1,8 +1,10 @@
+package Aplicacion;
+
 import javax.swing.*;
 import java.awt.*;
 
 @SuppressWarnings("serial")
-public class PanelSignUp extends JPanel {
+public class PanelRegistro extends JPanel {
     private JTextField nombres;
     private JTextField apellidos;
     private JTextField email;
@@ -12,7 +14,7 @@ public class PanelSignUp extends JPanel {
     private JButton cuenta;
     private JButton cierre;
     
-    public PanelSignUp() {
+    public PanelRegistro() {
     	// Configuración del panel
     	setLayout(null);
     	setBackground(new Color(222, 184, 135)); // Marroncito

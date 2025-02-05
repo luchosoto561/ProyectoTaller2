@@ -1,11 +1,13 @@
+package Aplicacion;
+
 import javax.swing.*;
 import java.awt.*;
 
 @SuppressWarnings("serial")
 public class Vista extends JFrame {
 	//todos los paneles como atributo
-	private PanelLogIn principal;
-	private PanelSignUp registro;
+	private PanelPrincipal principal;
+	private PanelRegistro registro;
 	private PanelActivos activos;
 	private PanelMisOperaciones operaciones;
 	private PanelCotizaciones cotizaciones;
@@ -28,8 +30,8 @@ public class Vista extends JFrame {
         add(contenedor);
 
         // Inicializar paneles
-        principal = new PanelLogIn();
-        registro = new PanelSignUp();
+        principal = new PanelPrincipal();
+        registro = new PanelRegistro();
         activos = new PanelActivos();
         operaciones = new PanelMisOperaciones();
         cotizaciones = new PanelCotizaciones();
@@ -65,10 +67,10 @@ public class Vista extends JFrame {
 	    
 	}
 	
-	public PanelLogIn getPanelPrincipal() {
+	public PanelPrincipal getPanelPrincipal() {
 		return principal;
 	}
-	public PanelSignUp getPanelRegistro() {
+	public PanelRegistro getPanelRegistro() {
 		return registro;
 	}
 	public PanelActivos getPanelActivos() {

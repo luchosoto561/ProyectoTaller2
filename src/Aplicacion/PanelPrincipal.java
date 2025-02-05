@@ -1,8 +1,10 @@
+package Aplicacion;
+
 import javax.swing.*;
 import java.awt.*;
 
 @SuppressWarnings("serial")
-public class PanelLogIn extends JPanel {
+public class PanelPrincipal extends JPanel {
     private JTextField gmail;
     private JButton registrarse;
     private JButton login;
@@ -10,7 +12,7 @@ public class PanelLogIn extends JPanel {
     private JPasswordField password;
     private JButton cierre;
 
-    public PanelLogIn() {
+    public PanelPrincipal() {
         // Configuración general del panel
         setLayout(null);
         setBackground(new Color(222, 184, 135)); // Marroncito

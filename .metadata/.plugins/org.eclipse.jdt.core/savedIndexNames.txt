@@ -1,0 +1,2 @@
+INDEX VERSION 1.134+C:\Luciano\taller 2\ProyectoTaller2\.metadata\.plugins\org.eclipse.jdt.core
+1865797976.index
