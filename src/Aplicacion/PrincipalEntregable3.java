@@ -3,6 +3,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import clasesDAO.ActivoCriptoDAOJDBC;
+import clasesDAO.ActivoFiatDAOJDBC;
+import clasesDAO.MonedaDAOJDBC;
+import clasesDAO.PersonaDAOJDBC;
+import clasesDAO.TransaccionDAOJDBC;
+import clasesDAO.UserDAOJDBC;
 import gestoresDAO.DataBaseConnection;
 
 
@@ -12,7 +18,7 @@ public class PrincipalEntregable3 {
 	    /*creo la base de datos*/
 		PrincipalEntregable3.creacionDeTablasEnBD(DataBaseConnection.getInstancia().getConexion());
         /*creo el controlador*/	  
-	    Controlador controlador = new Controlador(new Vista(), new Modelo());
+	    Controlador controlador = new Controlador(new Vista(), new Modelo(new UserDAOJDBC(), new PersonaDAOJDBC(),new MonedaDAOJDBC(), new ActivoCriptoDAOJDBC(), new ActivoFiatDAOJDBC(),new TransaccionDAOJDBC()));
 	}
 	/*------------------------------------------------------------------------------------------------------------------------*/
 	private static void creacionDeTablasEnBD(Connection connection) throws SQLException {

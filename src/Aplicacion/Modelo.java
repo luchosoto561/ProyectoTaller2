@@ -1,88 +1,53 @@
 package Aplicacion;
+import gestoresDAO.DataBaseConnection;
+import gestoresDAO.FactoryDAO;
 
 import java.util.*;
 import clases.*;
 import java.sql.*;
 import java.io.IOException;
 import java.io.FileWriter;
-import clases.*;
+import clasesDAO.*;
 
 public class Modelo {
-	User usuario;
-	Persona persona;
-	public boolean existeCuenta(String gmail, String password) {
-	    boolean existe = false;
-	    Connection connection = null;
-	    PreparedStatement pstmt = null;
-	    ResultSet rs = null;
-	    
-	    try {
-	        // 1. Obtener la conexión (esto dependerá de cómo gestiones la conexión en tu proyecto)
-	        connection = getConnection(); // Por ejemplo, un método que te retorne una Connection válida
-
-	        // 2. Preparar la consulta
-	        // Se usa JOIN para obtener datos tanto de USUARIO como de PERSONA, 
-	        // suponiendo que USUARIO tiene la columna ID_PERSONA que referencia a PERSONA(ID)
-	        String sql = "SELECT U.ID AS usuarioID, U.ID_PERSONA, U.EMAIL, U.PASSWORD, U.ACEPTA_TERMINOS, " +
-	                     "P.NOMBRES, P.APELLIDOS " +
-	                     "FROM USUARIO U " +
-	                     "JOIN PERSONA P ON U.ID_PERSONA = P.ID " +
-	                     "WHERE U.EMAIL = ? AND U.PASSWORD = ?";
-
-	        pstmt = connection.prepareStatement(sql);
-	        pstmt.setString(1, gmail);
-	        pstmt.setString(2, password);
-
-	        // 3. Ejecutar la consulta
-	        rs = pstmt.executeQuery();
-
-	        // 4. Verificar si se encontró un registro
-	        if (rs.next()) {
-	            existe = true;
-
-	            // 5. Extraer la información necesaria de la persona y usuario
-	            int usuarioID = rs.getInt("usuarioID");
-	            int idPersona = rs.getInt("ID_PERSONA");
-	            String email = rs.getString("EMAIL");
-	            String pass = rs.getString("PASSWORD");
-	            boolean aceptaTerminos = rs.getBoolean("ACEPTA_TERMINOS");
-	            String nombres = rs.getString("NOMBRES");
-	            String apellidos = rs.getString("APELLIDOS");
-
-	            // 6. Crear las instancias correspondientes
-	            Persona persona = new Persona(nombres, apellidos, idPersona);
-	            User usuario = new User(usuarioID, idPersona, email, pass, aceptaTerminos);
-
-	            // 7. Llamar al método del modelo que registra el usuario (por ejemplo, InsertUsuario)
-	            // Suponiendo que tu modelo tiene un método similar:
-	            this.insertarUsuarioyPersona(usuario, persona); // O el método que uses para guardar o establecer el usuario en tu modelo.
-	        }
-
-	    } catch (SQLException e) {
-	        e.printStackTrace();
-	    } finally {
-	        // 8. Cerrar recursos para evitar fugas de memoria
-	        try {
-	            if (rs != null) rs.close();
-	            if (pstmt != null) pstmt.close();
-	            // Dependiendo de tu gestión de la conexión, podrías cerrarla aquí o dejarla abierta para reutilizarla
-	            if (connection != null) connection.close();
-	        } catch (SQLException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	    
-	    return existe;
+	private User usuario;
+	private Persona persona;
+	private UserDAOJDBC usuarioDAO;
+	private PersonaDAOJDBC personaDAO;
+	private MonedaDAOJDBC monedaDAO;
+	private ActivoCriptoDAOJDBC activoCriptoDAO;
+	private ActivoFiatDAOJDBC activoFiatDAO;
+	private TransaccionDAOJDBC transaccionDAO;
+	
+	
+	public Modelo(UserDAOJDBC usuarioDAO, PersonaDAOJDBC personaDAO,MonedaDAOJDBC monedaDAO, ActivoCriptoDAOJDBC activoCriptoDAO, ActivoFiatDAOJDBC activoFiatDAO,TransaccionDAOJDBC transaccionDAO) {
+		super();
+		this.usuarioDAO = usuarioDAO;
+		this.personaDAO = personaDAO;
+		this.monedaDAO = monedaDAO;
+		this.activoCriptoDAO = activoCriptoDAO;
+		this.activoFiatDAO = activoFiatDAO;
+		this.transaccionDAO = transaccionDAO;
 	}
 
-	public boolean existeGmail(String Gmail) {
+	public boolean existeCuenta(String gmail, String password) {
+		User usr=usuarioDAO.existeUsuario(gmail, password);/*retorna null si no existe, sino retorna usuario*/
+		if(usr != null ) {
+			this.usuario=usr;
+			this.persona=personaDAO.buscarPersona(usr.getIdPersona());/*busca en la base de datos la persona con ese id y la devuelve*/
+			return true;
+		}
+		else 
+			return false;
+	}
+
+	public boolean existeGmail(String gmail) {
 		/*tengo que chequear si una cuenta ya usa el gmail pasado como parametro, si ya existe devuelve true*/
-		
-		return true;
+		return usuarioDAO.chequeodeEmail(gmail);
 	}
 	public void exportar() throws IOException {
 		List<ArrayList<String>> filas = new ArrayList<ArrayList<String>>();
-		List<Moneda> datos = stockDao.selectMonedasUsuario(usuarioLogeado.getIdUsuario());
+		List<Moneda> datos = stockDao.selectMonedasUsuario(usuario.getId());
 		ArrayList<String> aux;
 		
 		for (Moneda m : datos) {
@@ -121,9 +86,22 @@ public class Modelo {
 	public void cargarPanelActivos() {
 		
 	}
-	public void insertarUsuarioypersona(User usuario, Persona persona) {
-		/*tengo que crear la clase usuario y la clase persona, con la informacion que llega como parametros */
-		this.usuario=usuario;
-		this.persona=persona;
+	public void insertarUsuarioyPersona(String nombre, String apellido, String email, String password) {
+
+	    int idPersona = personaDAO.insertarPersona(nombre, apellido);
+	    if (idPersona == -1) {
+	        System.out.println("Error al insertar persona.");
+	        return;
+	    }
+
+	    int idUsuario = usuarioDAO.insertarUsuario(idPersona, email, password, true);
+	    if (idUsuario == -1) {
+	        System.out.println("Error al insertar usuario.");
+	        return;
+	    }
+
+	    this.usuario = new User(idUsuario, idPersona, email, password, true);
+	    this.persona = new Persona(nombre, apellido, idPersona);
 	}
+	
 }
