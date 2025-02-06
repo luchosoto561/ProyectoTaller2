@@ -51,10 +51,12 @@ public class Controlador {
 		vista.getPanelCotizaciones().getBtnVolver().addActionListener(new BotonVolverCotizaciones());
 		configurarMouseListener2(vista.getPanelCotizaciones().getBtnCerrarSesion());
 		configurarMouseListener(vista.getPanelCotizaciones().getBtnVolver());
-		/*en cotiaciones queda el boton cerrar sesion y despues nose como hacer la taba esa con botones por ahora*/
 		
 		vista.getPanelMisOperaciones().getBtnVolver().addActionListener(new BotonVolverOperaciones());
 		configurarMouseListener(vista.getPanelMisOperaciones().getBtnVolver());
+
+		vista.getPanelMisOperaciones().getBtnCerrarSesion().addActionListener(new BotonCerrarPanelMenu());
+		vista.getPanelCotizaciones().getBtnCerrarSesion().addActionListener(new BotonCerrarPanelMenu());
 		
     }
 	
@@ -151,7 +153,8 @@ public class Controlador {
 	
 	public class BotonCerrarPanelMenu implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			vista.mostrarPanel(vista.getPanelPrincipal());
+			int respuesta = JOptionPane.showConfirmDialog(null, "¿Estás seguro que deseas cerrar sesión?", "Confirmación", JOptionPane.YES_NO_OPTION);
+		    if (respuesta == JOptionPane.YES_OPTION) vista.mostrarPanel(vista.getPanelPrincipal());;
 		}
 	}
 	
