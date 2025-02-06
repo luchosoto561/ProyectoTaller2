@@ -1,7 +1,10 @@
 package Aplicacion;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
+
 import java.awt.*;
 
 @SuppressWarnings("serial")
@@ -12,7 +15,9 @@ public class PanelActivos extends JPanel {
     private JButton btnMisOperaciones;
     private JButton btnCotizaciones;
     private JLabel lblUsuario;
-    private JTable tblCriptos;
+    private DefaultTableModel modeloTabla;
+    private JTable tabla;
+    private TableRowSorter<DefaultTableModel> sorter;
     @SuppressWarnings("unused")
 	private String Usuario;
     private int num = 0;
@@ -20,8 +25,6 @@ public class PanelActivos extends JPanel {
     public PanelActivos() {
         setLayout(null);
         setBackground(new Color(222, 184, 135)); // Fondo marroncito
-
-        
 
         // Botón cerrar sesión
         btnCerrarSesion = new JButton("Cerrar Sesión");
@@ -31,7 +34,6 @@ public class PanelActivos extends JPanel {
         btnCerrarSesion.setForeground(Color.WHITE);
         btnCerrarSesion.setFocusPainted(false);
         btnCerrarSesion.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
-        add(btnCerrarSesion);
         add(btnCerrarSesion);
 
         // Botón generar datos
@@ -44,20 +46,67 @@ public class PanelActivos extends JPanel {
         btnGenerarDatos.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         add(btnGenerarDatos);
 
-        // Tabla de activos
-        String[] columnNames = {"Símbolo", "Nombre", "Monto"};
-        Object[][] data = {
-            {"BTC", "Bitcoin", "0.5"},
-            {"ETH", "Ethereum", "2.3"},
-            {"LTC", "Litecoin", "15.6"}
-        };
-        DefaultTableModel model = new DefaultTableModel(data, columnNames);
-        tblCriptos = new JTable(model);
-        JScrollPane scrollPane = new JScrollPane(tblCriptos);
-        scrollPane.setBounds(20, 75, 380, 300);
-        tblCriptos.setFont(new Font("Arial", Font.BOLD, 14));
-        tblCriptos.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        add(scrollPane);
+     
+        // **Crear la tabla dinámica**
+        String[] columnas = {"ID", "Criptomoneda", "Precio"};
+        modeloTabla = new DefaultTableModel(columnas, 0); // 0 indica que no hay filas iniciales
+        tabla = new JTable(modeloTabla);
+        tabla.setBackground(new Color (139,69,19));
+        tabla.setRowHeight(30);
+        
+        tabla.setRowSelectionAllowed(false); // No permite seleccionar filas completas
+        tabla.setCellSelectionEnabled(false); // No permite seleccionar celdas individuales
+        tabla.getTableHeader().setResizingAllowed(false); // Desactivar redimensionamiento
+        tabla.getTableHeader().setReorderingAllowed(false); // Desactivar movimiento de columnas
+
+        
+        // Cambiar tamaño y fuente de los nombres de las columnas
+        tabla.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
+        tabla.getTableHeader().setBackground(new Color (139,69,19));
+        tabla.getTableHeader().setForeground(Color.WHITE);
+        tabla.getTableHeader().setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
+        tabla.getTableHeader().setPreferredSize(new Dimension(tabla.getWidth(), 40)); // Altura 30px
+        tabla.setGridColor(new Color(0, 0, 0));
+        
+        DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
+        renderer.setHorizontalAlignment(SwingConstants.CENTER);
+        renderer.setFont(new Font("Arial", Font.BOLD, 14));
+        renderer.setForeground(Color.BLACK);
+        renderer.setBackground(new Color (200, 150, 100));
+        renderer.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1)); 
+        tabla.setDefaultRenderer(Object.class, renderer);
+
+        // Crear el sorter para permitir el ordenamiento de las filas
+        sorter = new TableRowSorter<>(modeloTabla);
+        tabla.setRowSorter(sorter);
+        
+        // Agregar la tabla a un JScrollPane para que tenga scroll
+        JScrollPane scroll = new JScrollPane(tabla);
+        scroll.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
+        scroll.setBounds(31, 36, 355, 330);
+        
+        add(scroll);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        this.agregarFila(4, "buitrecoin", 30000);
+        this.agregarFila(7, "dogeperro", 34670);
+        
 
         // Botón Exportar como CSV
         btnExportarCSV = new JButton("Exportar como CSV");
@@ -102,6 +151,17 @@ public class PanelActivos extends JPanel {
         num++;
     }
     
+    // Método para agregar una fila a la tabla
+    public void agregarFila(int id, String criptomoneda, double precio) {
+        // Crear el arreglo con los valores que se pasarán como parámetro
+        Object[] nuevaFila = {id, criptomoneda, precio};
+        
+        // Obtener el modelo de la tabla y agregar la fila
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        modelo.addRow(nuevaFila); // Agregar la fila al modelo de la tabla
+    }
+
+    
     // Métodos get de los atributos
     public JButton getBtnCerrarSesion() {
         return btnCerrarSesion;
@@ -128,6 +188,6 @@ public class PanelActivos extends JPanel {
     }
 
     public JTable getTblCriptos() {
-        return tblCriptos;
+        return tabla;
     }
 }
