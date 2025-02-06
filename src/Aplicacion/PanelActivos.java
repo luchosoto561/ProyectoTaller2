@@ -48,7 +48,7 @@ public class PanelActivos extends JPanel {
 
      
         // **Crear la tabla dinámica**
-        String[] columnas = {"ID", "Criptomoneda", "Precio"};
+        String[] columnas = {"", "Criptomoneda", "Monto"};
         modeloTabla = new DefaultTableModel(columnas, 0); // 0 indica que no hay filas iniciales
         tabla = new JTable(modeloTabla);
         tabla.setBackground(new Color (139,69,19));
@@ -70,7 +70,7 @@ public class PanelActivos extends JPanel {
         
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
-        renderer.setFont(new Font("Arial", Font.BOLD, 14));
+        renderer.setFont(new Font("Arial", Font.BOLD, 18));
         renderer.setForeground(Color.BLACK);
         renderer.setBackground(new Color (200, 150, 100));
         renderer.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1)); 
