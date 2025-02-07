@@ -30,10 +30,11 @@ public class PanelMisOperaciones extends JPanel {
         
         
      // Crear el modelo de la lista
-        String[] columnas = {"ID", "Criptomoneda", "Precio"};
+        @SuppressWarnings("unused")
+		String[] columnas = {"ID", "Criptomoneda", "Precio"};
         modeloLista = new DefaultListModel<>();
         lista = new JList<>(modeloLista);
-        lista.setBackground(new Color(200, 150, 100));
+        lista.setBackground(new Color(245, 245, 220)); //200,150,100
         lista.setFont(new Font("Arial", Font.BOLD, 14));
         lista.setForeground(Color.BLACK);
         lista.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
