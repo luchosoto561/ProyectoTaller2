@@ -51,7 +51,7 @@ public class PanelActivos extends JPanel {
         String[] columnas = {"", "Criptomoneda", "Monto"};
         modeloTabla = new DefaultTableModel(columnas, 0); // 0 indica que no hay filas iniciales
         tabla = new JTable(modeloTabla);
-        tabla.setBackground(new Color (139,69,19));
+        tabla.setBackground(new Color (245, 245, 220)); //200,150,100
         tabla.setRowHeight(30);
         
         tabla.setRowSelectionAllowed(false); // No permite seleccionar filas completas
@@ -62,7 +62,7 @@ public class PanelActivos extends JPanel {
         
         // Cambiar tamaño y fuente de los nombres de las columnas
         tabla.getTableHeader().setFont(new Font("Arial", Font.BOLD, 14));
-        tabla.getTableHeader().setBackground(new Color (139,69,19));
+        tabla.getTableHeader().setBackground(new Color (139, 69, 19));
         tabla.getTableHeader().setForeground(Color.WHITE);
         tabla.getTableHeader().setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
         tabla.getTableHeader().setPreferredSize(new Dimension(tabla.getWidth(), 40)); // Altura 30px
@@ -70,9 +70,9 @@ public class PanelActivos extends JPanel {
         
         DefaultTableCellRenderer renderer = new DefaultTableCellRenderer();
         renderer.setHorizontalAlignment(SwingConstants.CENTER);
-        renderer.setFont(new Font("Arial", Font.BOLD, 18));
+        renderer.setFont(new Font("Arial", Font.BOLD, 24));
         renderer.setForeground(Color.BLACK);
-        renderer.setBackground(new Color (200, 150, 100));
+        renderer.setBackground(new Color (245, 245, 220));
         renderer.setBorder(BorderFactory.createLineBorder(new Color(0, 0, 0), 1)); 
         tabla.setDefaultRenderer(Object.class, renderer);
 
