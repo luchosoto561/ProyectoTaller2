@@ -46,7 +46,7 @@ public class UserDAOJDBC implements UserDAO {
 	        try {
 	            if (rs != null) rs.close();
 	            if (pstmt != null) pstmt.close();
-	            if (connection != null) connection.close();
+	           /* if (connection != null) connection.close();*/
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
@@ -65,7 +65,7 @@ public class UserDAOJDBC implements UserDAO {
 	        conexion = DataBaseConnection.getInstancia().getConexion();
 	        
 	        // Definir la consulta SQL con un parámetro
-	        String sql = "SELECT 1 FROM USUARIO WHERE MAIL = ? LIMIT 1";
+	        String sql = "SELECT 1 FROM USUARIO WHERE EMAIL = ? LIMIT 1";
 	        
 	        // Crear PreparedStatement y establecer el parámetro
 	        pstmt = conexion.prepareStatement(sql);
@@ -86,7 +86,7 @@ public class UserDAOJDBC implements UserDAO {
 	        try {
 	            if (rs != null) rs.close();
 	            if (pstmt != null) pstmt.close();
-	            if (conexion != null) conexion.close();
+	           /* if (conexion != null) conexion.close();*/
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
@@ -124,7 +124,7 @@ public class UserDAOJDBC implements UserDAO {
             try {
                 if (rsUsuario != null) rsUsuario.close();
                 if (pstmtUsuario != null) pstmtUsuario.close();
-                if (conexion != null) conexion.close();
+              /*  if (conexion != null) conexion.close();*/
             } catch (SQLException e) {
                 e.printStackTrace();
             }

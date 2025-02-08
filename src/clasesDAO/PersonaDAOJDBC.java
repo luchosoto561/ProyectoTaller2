@@ -27,7 +27,7 @@ public class PersonaDAOJDBC implements PersonaDAO {
 
 	        // Verificar si se encontró una persona
 	        if (rs.next()) {
-	            personaEncontrada = new Persona(rs.getString("NOMBRE"), rs.getString("APELLIDO"), rs.getInt("ID"));
+	            personaEncontrada = new Persona(rs.getString("NOMBRES"), rs.getString("APELLIDOS"), rs.getInt("ID"));
 	        }
 
 	    } catch (SQLException e) {
@@ -37,7 +37,7 @@ public class PersonaDAOJDBC implements PersonaDAO {
 	        try {
 	            if (rs != null) rs.close();
 	            if (pstmt != null) pstmt.close();
-	            if (conexion != null) conexion.close();
+	            /*if (conexion != null) conexion.close();*/
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }
@@ -73,7 +73,7 @@ public class PersonaDAOJDBC implements PersonaDAO {
             try {
                 if (rsPersona != null) rsPersona.close();
                 if (pstmtPersona != null) pstmtPersona.close();
-                if (conexion != null) conexion.close();
+               /*if (conexion != null) conexion.close();*/
             } catch (SQLException e) {
                 e.printStackTrace();
             }

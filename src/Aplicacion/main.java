@@ -1,6 +1,15 @@
 package Aplicacion;
 
 import javax.swing.*;
+
+import clasesDAO.ActivoCriptoDAOJDBC;
+import clasesDAO.ActivoFiatDAOJDBC;
+import clasesDAO.MonedaDAOJDBC;
+import clasesDAO.PersonaDAOJDBC;
+import clasesDAO.TransaccionDAOJDBC;
+import clasesDAO.UserDAOJDBC;
+import gestoresDAO.DataBaseConnection;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -74,11 +83,10 @@ public class main {
 	public static void main (String [] args) {
 		 String url = "jdbc:sqlite:mi_base_de_datos.db"; 
 	        
-	        try (Connection connection = DriverManager.getConnection(url)) {
+	        try {
 	            // Llamamos al método pasando la conexión como parámetro
-	            creaciónDeTablasEnBD(connection);
-	            System.out.println("Tablas creadas correctamente.");
-	            new Controlador(new Vista(),new Modelo());
+	            creaciónDeTablasEnBD(DataBaseConnection.getInstancia().getConexion());
+	            new Controlador(new Vista(),new Modelo(new UserDAOJDBC(), new PersonaDAOJDBC(),new MonedaDAOJDBC(), new ActivoCriptoDAOJDBC(), new ActivoFiatDAOJDBC(),new TransaccionDAOJDBC()));
 	        } catch (SQLException e) {
 	            e.printStackTrace();
 	        }

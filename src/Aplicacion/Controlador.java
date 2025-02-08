@@ -2,6 +2,7 @@ package Aplicacion;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -13,6 +14,9 @@ import Exceptions.CompletarCamposException;
 import Exceptions.DatosNoValidosException;
 import Exceptions.ExceptionAbstract;
 import Exceptions.NoAceptoTerminosException;
+import clases.ActivoCripto;
+import clases.ActivoFiat;
+import clases.Moneda;
 
 public class Controlador {
 	
@@ -107,7 +111,7 @@ public class Controlador {
 					throw new CompletarCamposException();
 				if ( ! modelo.existeCuenta(vista.getPanelPrincipal().getGmail().getText(), new String(vista.getPanelPrincipal().getPassword().getPassword())))/*si no esta en la base de datos lanzamos error*/
 					throw new DatosNoValidosException();
-				modelo.cargarPanelActivos();
+				cargarPanelActivos();
 				vista.mostrarPanel(vista.getPanelActivos());/*muestra el panel de los activos*/
 			}
 			catch (ExceptionAbstract x) {
@@ -127,14 +131,14 @@ public class Controlador {
 	public class BotonRegistrarPanelRegistro implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			try{
-				if (vista.getPanelRegistro().getEmail().getText().isBlank() || new String(vista.getPanelPrincipal().getPassword().getPassword()).isBlank() || vista.getPanelRegistro().getApellidos().getText().isBlank() || vista.getPanelRegistro().getNombres().getText().isBlank()  ) /*si no lleno los campos, lanzamos error*/
+				if (vista.getPanelRegistro().getEmail().getText().isBlank() || new String (vista.getPanelRegistro().getPassword().getPassword()).isBlank() || vista.getPanelRegistro().getApellidos().getText().isBlank() || vista.getPanelRegistro().getNombres().getText().isBlank()  ) /*si no lleno los campos, lanzamos error*/
 					throw new CompletarCamposException();	
 		    	if(!vista.getPanelRegistro().getAceptarTerminos().isSelected())/*si no acepto las condiciones salta error*/
 		    		throw new NoAceptoTerminosException();
 		    	if(modelo.existeGmail(vista.getPanelRegistro().getEmail().getText()))/*si el gmail elegido existe, salta error*/
 					throw new DatosNoValidosException();
 		    	modelo.insertarUsuarioyPersona(vista.getPanelRegistro().getNombres().getText(), vista.getPanelRegistro().getApellidos().getText(), vista.getPanelRegistro().getEmail().getText(), vista.getPanelRegistro().getPassword().getText());
-				modelo.cargarPanelActivos();
+				cargarPanelActivos();
 		    	vista.mostrarPanel(vista.getPanelActivos());
 				
 			}
@@ -195,13 +199,27 @@ public class Controlador {
 	}
 	public class BotonGenerarDatos implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-				modelo.generarStock();
-				modelo.generarActivos();
-				/*vista.getPanelMenuPrincipal().actualizarTablaActivos(modelo.getListaActivos());
-				vista.repaint();*/
-			
+			/*cuando se toque este boton lo que tiene que pasar es que el stock de todas las monedas se ponga en aleatorio y la cantidad de todos los activos tambien se ponga en aleatorio*/
+			modelo.generarStock();
+			modelo.generarCantidad();
 		}
 		
 		
+	}
+	public void cargarPanelActivos() {
+		
+		List<ActivoCripto> activosCripto = modelo.listarActivoCripto();/*me tengo que traer los activos cripto de todo el usuario*/ 
+		List<ActivoFiat> activosFiat = modelo.listarActivoFiat();/*me tengo que traer los activos fiat de todo el usuario*/
+		List<Moneda> monedas = modelo.listarMonedas();/*me trae todas las monedas de la base de datos en un arrayList*/
+		
+		for (ActivoCripto ac : activosCripto) {
+			/*cada activo tengo que cargarlo en la tabla*/
+			vista.getPanelActivos().agregarFila(monedas.get(ac.getId()-1).getId(), monedas.get(ac.getId()-1).getNombre(), ac.getCantidad() * monedas.get(ac.getId()-1).getValorDolar());
+		}
+		
+		for (ActivoFiat af : activosFiat) {
+			/*cada activo fiat tengo que cargarlo en la tabla*/
+			vista.getPanelActivos().agregarFila(monedas.get(af.getId()-1).getId(), monedas.get(af.getId()-1).getNombre(), af.getCantidad() * monedas.get(af.getId()-1).getValorDolar());
+		}
 	}
 }
