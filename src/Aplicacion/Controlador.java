@@ -23,6 +23,8 @@ public class Controlador {
 	private Vista vista;
 	@SuppressWarnings("unused")
 	private Modelo modelo;
+	private String cripto;
+	private String precio;
 	
 	public Controlador(Vista vista, Modelo modelo) {
 		this.vista = vista;
@@ -50,18 +52,34 @@ public class Controlador {
         configurarMouseListener(vista.getPanelActivos().getBtnMisOperaciones());
         configurarMouseListener(vista.getPanelActivos().getBtnExportarCSV());
         configurarMouseListener(vista.getPanelActivos().getBtnGenerarDatos());
-		/*queda el boton exportar como csv, generar datos de prueba, en el panel activos*/
         
-		vista.getPanelCotizaciones().getBtnVolver().addActionListener(new BotonVolverCotizaciones());
+		vista.getPanelCotizaciones().getBtnVolver().addActionListener(new BotonVolver());
 		configurarMouseListener2(vista.getPanelCotizaciones().getBtnCerrarSesion());
 		configurarMouseListener(vista.getPanelCotizaciones().getBtnVolver());
 		
-		vista.getPanelMisOperaciones().getBtnVolver().addActionListener(new BotonVolverOperaciones());
+		vista.getPanelMisOperaciones().getBtnVolver().addActionListener(new BotonVolver());
 		configurarMouseListener(vista.getPanelMisOperaciones().getBtnVolver());
 
 		vista.getPanelMisOperaciones().getBtnCerrarSesion().addActionListener(new BotonCerrarPanelMenu());
 		vista.getPanelCotizaciones().getBtnCerrarSesion().addActionListener(new BotonCerrarPanelMenu());
 		
+		vista.getPanelCotizaciones().getCompraBTC().addActionListener(new CompraBTC());
+		configurarMouseListener3(vista.getPanelCotizaciones().getCompraBTC());
+		vista.getPanelCotizaciones().getCompraETH().addActionListener(new CompraETH());
+		configurarMouseListener3(vista.getPanelCotizaciones().getCompraETH());
+		vista.getPanelCotizaciones().getCompraUSDC().addActionListener(new CompraUSDC());
+		configurarMouseListener3(vista.getPanelCotizaciones().getCompraUSDC());
+		vista.getPanelCotizaciones().getCompraUSDT().addActionListener(new CompraUSDT());
+		configurarMouseListener3(vista.getPanelCotizaciones().getCompraUSDT());
+		vista.getPanelCotizaciones().getCompraDOGE().addActionListener(new CompraDOGE());
+		configurarMouseListener3(vista.getPanelCotizaciones().getCompraDOGE());
+		
+		vista.getPanelCompra().getBtnVolver().addActionListener(new BotonVolver2());
+		configurarMouseListener(vista.getPanelCompra().getBtnVolver());
+		vista.getPanelCompra().getBtnCompra().addActionListener(new Comprar());
+		configurarMouseListener(vista.getPanelCompra().getBtnCompra());
+		vista.getPanelCompra().getBtnConvertir().addActionListener(new Convertir());
+		configurarMouseListener3(vista.getPanelCompra().getBtnConvertir());
     }
 	
 
@@ -92,6 +110,22 @@ public class Controlador {
             @Override
             public void mouseExited(MouseEvent e) {
                 boton.setBackground(new Color(255, 69, 0)); // Rojo anaranjado
+                boton.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
+            }
+        });
+    }
+    
+    private void configurarMouseListener3(javax.swing.JButton boton) {
+        boton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                boton.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0), 2));
+                boton.setBackground(new Color(54, 159, 54));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                boton.setBackground(new Color(34, 139, 34));
                 boton.setBorder(javax.swing.BorderFactory.createLineBorder(new Color(0, 0, 0), 1));
             }
         });
@@ -129,6 +163,7 @@ public class Controlador {
 	}
 	
 	public class BotonRegistrarPanelRegistro implements ActionListener{
+		@SuppressWarnings("deprecation")
 		public void actionPerformed(ActionEvent e) {
 			try{
 				if (vista.getPanelRegistro().getEmail().getText().isBlank() || new String (vista.getPanelRegistro().getPassword().getPassword()).isBlank() || vista.getPanelRegistro().getApellidos().getText().isBlank() || vista.getPanelRegistro().getNombres().getText().isBlank()  ) /*si no lleno los campos, lanzamos error*/
@@ -158,7 +193,15 @@ public class Controlador {
 	public class BotonCerrarPanelMenu implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			int respuesta = JOptionPane.showConfirmDialog(null, "¿Estás seguro que deseas cerrar sesión?", "Confirmación", JOptionPane.YES_NO_OPTION);
-		    if (respuesta == JOptionPane.YES_OPTION) vista.mostrarPanel(vista.getPanelPrincipal());;
+		    if (respuesta == JOptionPane.YES_OPTION) {
+		    	vista.getPanelPrincipal().getGmail().setText("");
+		    	vista.getPanelPrincipal().getPassword().setText("");
+		    	vista.getPanelRegistro().getNombres().setText("");
+		    	vista.getPanelRegistro().getApellidos().setText("");
+		    	vista.getPanelRegistro().getEmail().setText("");
+		    	vista.getPanelRegistro().getPassword().setText("");
+		    	vista.mostrarPanel(vista.getPanelPrincipal());;
+		    }
 		}
 	}
 	
@@ -174,17 +217,97 @@ public class Controlador {
 		}
 	}
 	
-	public class BotonVolverCotizaciones implements ActionListener{
+	public class BotonVolver implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			vista.mostrarPanel(vista.getPanelActivos());
 		}
 	}
 	
-	public class BotonVolverOperaciones implements ActionListener{
+	public class BotonVolver2 implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			vista.mostrarPanel(vista.getPanelActivos());
+			vista.mostrarPanel(vista.getPanelCotizaciones());
+			vista.getPanelCompra().setEqui("", "");
+			vista.getPanelCompra().getCant().setText("0");
 		}
 	}
+	
+	public class CompraBTC implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			cripto = "Bitcoin (BTC)";
+			precio = vista.getPanelCotizaciones().getPrecioBTC().getText();
+			//falta agregar un metodo que chequee el stock
+			vista.getPanelCompra().setStock("1000", cripto);
+			vista.getPanelCompra().setPrecio(precio);
+			vista.mostrarPanel (vista.getPanelCompra());
+		}
+	}
+	public class CompraETH implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			cripto = "Ethereum (ETH)";
+			precio = vista.getPanelCotizaciones().getPrecioETH().getText();
+			//falta agregar un metodo que chequee el stock
+			vista.getPanelCompra().setStock("1000", cripto);
+			vista.getPanelCompra().setPrecio(precio);
+			vista.mostrarPanel (vista.getPanelCompra());
+		}
+	}
+	public class CompraUSDC implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			cripto = "Usdc (USDC)";
+			precio = vista.getPanelCotizaciones().getPrecioUSDC().getText();
+			//falta agregar un metodo que chequee el stock
+			vista.getPanelCompra().setStock("1000", cripto);
+			vista.getPanelCompra().setPrecio(precio);
+			vista.mostrarPanel (vista.getPanelCompra());
+		}
+	}
+	public class CompraUSDT implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			cripto = "Tether (USDT)";
+			precio = vista.getPanelCotizaciones().getPrecioUSDT().getText();
+			//falta agregar un metodo que chequee el stock
+			vista.getPanelCompra().setStock("1000", cripto);
+			vista.getPanelCompra().setPrecio(precio);
+			vista.mostrarPanel (vista.getPanelCompra());
+		}
+	}
+	public class CompraDOGE implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			cripto = "Dogecoin (DOGE)";
+			precio = vista.getPanelCotizaciones().getPrecioDOGE().getText();
+			//falta agregar un metodo que chequee el stock
+			vista.getPanelCompra().setStock("1000", cripto);
+			vista.getPanelCompra().setPrecio(precio);
+			vista.mostrarPanel (vista.getPanelCompra());
+		}
+	}
+	
+	
+	public class Comprar implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			//falta chequear si se puede comprar y hacerle una exception si no
+			String fecha = "08/02/2025";
+			String hora = "20:12";
+			String cantidad = vista.getPanelCompra().getEqui().getText();
+			if (cantidad != "" && cantidad != "0.0 Bitcoin (BTC)" && cantidad != "0.0 Ethereum (ETH)" && cantidad != "0.0 Tether (USDT)" && cantidad != "0.0 Usdc (USDC)" && cantidad != "0.0 Dogecoin (DOGE)"){
+				vista.getPanelMisOperaciones().agregarCriptomoneda(fecha, hora, "Compra", cantidad);
+			}
+			vista.mostrarPanel(vista.getPanelCotizaciones());
+			vista.getPanelCompra().setEqui("", "");
+			vista.getPanelCompra().getCant().setText("0");
+		}
+	}
+	
+	public class Convertir implements ActionListener{
+		@SuppressWarnings("removal")
+		public void actionPerformed(ActionEvent e) {
+			@SuppressWarnings("unused")
+			double precio = new Double (vista.getPanelCompra().getPrecio().getText().substring(1));
+			double cant = new Double (vista.getPanelCompra().getCant().getText());
+			vista.getPanelCompra().setEqui(cant / precio + "", cripto);
+		}
+	}
+	
 	public class BotonExportarCSV implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			try {
