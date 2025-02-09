@@ -5,10 +5,15 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 @SuppressWarnings("serial")
 public class PanelCotizaciones extends JPanel {
-    private JTable tablaCotizaciones; // Tabla para las cotizaciones
-    private DefaultTableModel modeloTabla; // Modelo para la tabla
-    private JButton btnVolver; // Botón para volver
-    private JButton btnCerrarSesion; // Botón para cerrar sesión
+    private JTable tablaCotizaciones;
+    private DefaultTableModel modeloTabla;
+    private JButton btnVolver;
+    private JButton btnCerrarSesion;
+    JButton btnBTCComprar;
+    JButton btnETHComprar;
+    JButton btnUSDCComprar;
+    JButton btnUSDTComprar;
+    JButton btnDOGEComprar;
     JLabel lblBitcoinPrecio;
     JLabel lblEthereumPrecio;
     JLabel lblUsdcPrecio;
@@ -42,24 +47,26 @@ public class PanelCotizaciones extends JPanel {
         panelBitcoin.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         panelBitcoin.setBounds(20, 80, 550, 50);
 
+        //agregar imagen Bitcoin
+        
         JLabel lblBitcoinNombre = new JLabel("Bitcoin (BTC)");
         lblBitcoinNombre.setFont(new Font("Arial", Font.BOLD, 14));
-        lblBitcoinNombre.setBounds(10, 10, 200, 30);
+        lblBitcoinNombre.setBounds(70, 10, 200, 30);
         panelBitcoin.add(lblBitcoinNombre);
 
         lblBitcoinPrecio = new JLabel("$66,960.39");
         lblBitcoinPrecio.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblBitcoinPrecio.setBounds(220, 10, 150, 30);
+        lblBitcoinPrecio.setBounds(260, 10, 150, 30);
         panelBitcoin.add(lblBitcoinPrecio);
 
-        JButton btnBitcoinComprar = new JButton("Comprar");
-        btnBitcoinComprar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnBitcoinComprar.setBackground(new Color(34, 139, 34)); // Verde
-        btnBitcoinComprar.setForeground(Color.WHITE);
-        btnBitcoinComprar.setFocusPainted(false);
-        btnBitcoinComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        btnBitcoinComprar.setBounds(400, 10, 100, 30);
-        panelBitcoin.add(btnBitcoinComprar);
+        btnBTCComprar = new JButton("Comprar");
+        btnBTCComprar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnBTCComprar.setBackground(new Color(34, 139, 34)); // Verde
+        btnBTCComprar.setForeground(Color.WHITE);
+        btnBTCComprar.setFocusPainted(false);
+        btnBTCComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        btnBTCComprar.setBounds(440, 10, 100, 30);
+        panelBitcoin.add(btnBTCComprar);
 
         add(panelBitcoin);
 
@@ -70,24 +77,26 @@ public class PanelCotizaciones extends JPanel {
         panelEthereum.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         panelEthereum.setBounds(20, 140, 550, 50);
 
+        //agregar imagen Ethereum
+        
         JLabel lblEthereumNombre = new JLabel("Ethereum (ETH)");
         lblEthereumNombre.setFont(new Font("Arial", Font.BOLD, 14));
-        lblEthereumNombre.setBounds(10, 10, 200, 30);
+        lblEthereumNombre.setBounds(70, 10, 200, 30);
         panelEthereum.add(lblEthereumNombre);
 
         lblEthereumPrecio = new JLabel("$2,478.33");
         lblEthereumPrecio.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblEthereumPrecio.setBounds(220, 10, 150, 30);
+        lblEthereumPrecio.setBounds(260, 10, 150, 30);
         panelEthereum.add(lblEthereumPrecio);
 
-        JButton btnEthereumComprar = new JButton("Comprar");
-        btnEthereumComprar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnEthereumComprar.setBackground(new Color(34, 139, 34)); // Verde
-        btnEthereumComprar.setForeground(Color.WHITE);
-        btnEthereumComprar.setFocusPainted(false);
-        btnEthereumComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        btnEthereumComprar.setBounds(400, 10, 100, 30);
-        panelEthereum.add(btnEthereumComprar);
+        btnETHComprar = new JButton("Comprar");
+        btnETHComprar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnETHComprar.setBackground(new Color(34, 139, 34)); // Verde
+        btnETHComprar.setForeground(Color.WHITE);
+        btnETHComprar.setFocusPainted(false);
+        btnETHComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        btnETHComprar.setBounds(440, 10, 100, 30);
+        panelEthereum.add(btnETHComprar);
 
         add(panelEthereum);
 
@@ -97,53 +106,57 @@ public class PanelCotizaciones extends JPanel {
         panelUsdc.setBackground(new Color(245, 245, 220)); // Beige claro
         panelUsdc.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         panelUsdc.setBounds(20, 200, 550, 50);
+        
+      //agregar imagen Usdc
 
         JLabel lblUsdcNombre = new JLabel("Usdc (USDC)");
         lblUsdcNombre.setFont(new Font("Arial", Font.BOLD, 14));
-        lblUsdcNombre.setBounds(10, 10, 200, 30);
+        lblUsdcNombre.setBounds(70, 10, 200, 30);
         panelUsdc.add(lblUsdcNombre);
 
         lblUsdcPrecio = new JLabel("$0.9999");
         lblUsdcPrecio.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblUsdcPrecio.setBounds(220, 10, 150, 30);
+        lblUsdcPrecio.setBounds(260, 10, 150, 30);
         panelUsdc.add(lblUsdcPrecio);
 
-        JButton btnUsdcComprar = new JButton("Comprar");
-        btnUsdcComprar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnUsdcComprar.setBackground(new Color(34, 139, 34)); // Verde
-        btnUsdcComprar.setForeground(Color.WHITE);
-        btnUsdcComprar.setFocusPainted(false);
-        btnUsdcComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        btnUsdcComprar.setBounds(400, 10, 100, 30);
-        panelUsdc.add(btnUsdcComprar);
+        btnUSDCComprar = new JButton("Comprar");
+        btnUSDCComprar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnUSDCComprar.setBackground(new Color(34, 139, 34)); // Verde
+        btnUSDCComprar.setForeground(Color.WHITE);
+        btnUSDCComprar.setFocusPainted(false);
+        btnUSDCComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        btnUSDCComprar.setBounds(440, 10, 100, 30);
+        panelUsdc.add(btnUSDCComprar);
 
         add(panelUsdc);
 
-        // Panel Dogecoin (DOGE)
+        // Panel Tether (USDT)
         JPanel panelTether = new JPanel();
         panelTether.setLayout(null);
         panelTether.setBackground(new Color(245, 245, 220)); // Beige claro
         panelTether.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         panelTether.setBounds(20, 260, 550, 50);
 
+      //agregar imagen Tether
+        
         JLabel lblTetherNombre = new JLabel("Tether (USDT)");
         lblTetherNombre.setFont(new Font("Arial", Font.BOLD, 14));
-        lblTetherNombre.setBounds(10, 10, 200, 30);
+        lblTetherNombre.setBounds(70, 10, 200, 30);
         panelTether.add(lblTetherNombre);
 
         lblTetherPrecio = new JLabel("$0.9986");
         lblTetherPrecio.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblTetherPrecio.setBounds(220, 10, 150, 30);
+        lblTetherPrecio.setBounds(260, 10, 150, 30);
         panelTether.add(lblTetherPrecio);
 
-        JButton btnTetherComprar = new JButton("Comprar");
-        btnTetherComprar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnTetherComprar.setBackground(new Color(34, 139, 34)); // Verde
-        btnTetherComprar.setForeground(Color.WHITE);
-        btnTetherComprar.setFocusPainted(false);
-        btnTetherComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        btnTetherComprar.setBounds(400, 10, 100, 30);
-        panelTether.add(btnTetherComprar);
+        btnUSDTComprar = new JButton("Comprar");
+        btnUSDTComprar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnUSDTComprar.setBackground(new Color(34, 139, 34)); // Verde
+        btnUSDTComprar.setForeground(Color.WHITE);
+        btnUSDTComprar.setFocusPainted(false);
+        btnUSDTComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        btnUSDTComprar.setBounds(440, 10, 100, 30);
+        panelTether.add(btnUSDTComprar);
 
         add(panelTether);
         
@@ -153,25 +166,27 @@ public class PanelCotizaciones extends JPanel {
         panelDogecoin.setBackground(new Color(245, 245, 220)); // Beige claro
         panelDogecoin.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
         panelDogecoin.setBounds(20, 320, 550, 50);
+        
+      //agregar imagen Dogecoin
 
         JLabel lblDogecoinNombre = new JLabel("Dogecoin (DOGE)");
         lblDogecoinNombre.setFont(new Font("Arial", Font.BOLD, 14));
-        lblDogecoinNombre.setBounds(10, 10, 200, 30);
+        lblDogecoinNombre.setBounds(70, 10, 200, 30);
         panelDogecoin.add(lblDogecoinNombre);
 
         lblDogecoinPrecio = new JLabel("$0.1359");
         lblDogecoinPrecio.setFont(new Font("Arial", Font.PLAIN, 14));
-        lblDogecoinPrecio.setBounds(220, 10, 150, 30);
+        lblDogecoinPrecio.setBounds(260, 10, 150, 30);
         panelDogecoin.add(lblDogecoinPrecio);
 
-        JButton btnDogecoinComprar = new JButton("Comprar");
-        btnDogecoinComprar.setFont(new Font("Arial", Font.BOLD, 14));
-        btnDogecoinComprar.setBackground(new Color(34, 139, 34)); // Verde
-        btnDogecoinComprar.setForeground(Color.WHITE);
-        btnDogecoinComprar.setFocusPainted(false);
-        btnDogecoinComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
-        btnDogecoinComprar.setBounds(400, 10, 100, 30);
-        panelDogecoin.add(btnDogecoinComprar);
+        btnDOGEComprar = new JButton("Comprar");
+        btnDOGEComprar.setFont(new Font("Arial", Font.BOLD, 14));
+        btnDOGEComprar.setBackground(new Color(34, 139, 34)); // Verde
+        btnDOGEComprar.setForeground(Color.WHITE);
+        btnDOGEComprar.setFocusPainted(false);
+        btnDOGEComprar.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+        btnDOGEComprar.setBounds(440, 10, 100, 30);
+        panelDogecoin.add(btnDOGEComprar);
 
         add(panelDogecoin);
         
@@ -199,6 +214,37 @@ public class PanelCotizaciones extends JPanel {
     }
     public JButton getBtnCerrarSesion() {
         return btnCerrarSesion;
+    }
+    public JButton getCompraBTC() {
+    	return btnBTCComprar;
+    }
+    public JButton getCompraETH() {
+    	return btnETHComprar;
+    }
+    public JButton getCompraUSDT() {
+    	return btnUSDTComprar;
+    }
+    public JButton getCompraUSDC() {
+    	return btnUSDCComprar;
+    }
+    public JButton getCompraDOGE() {
+    	return btnDOGEComprar;
+    }
+    
+    public JLabel getPrecioBTC() {
+    	return lblBitcoinPrecio;
+    }
+    public JLabel getPrecioETH() {
+    	return lblEthereumPrecio;
+    }
+    public JLabel getPrecioUSDC() {
+    	return lblUsdcPrecio;
+    }
+    public JLabel getPrecioUSDT() {
+    	return lblTetherPrecio;
+    }
+    public JLabel getPrecioDOGE() {
+    	return lblDogecoinPrecio;
     }
     
     public void actualizarPrecioBTC(String nuevoTitulo) {
