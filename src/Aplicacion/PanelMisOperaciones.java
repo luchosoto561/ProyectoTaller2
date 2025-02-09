@@ -55,21 +55,6 @@ public class PanelMisOperaciones extends JPanel {
         
         add(scroll);
         
-        agregarCriptomoneda ("12/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("12/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("12/02/2025", "10:00", "Swap", "0,1 BTC => 500 USDT");
-        agregarCriptomoneda ("15/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("12/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("18/02/2025", "10:00", "Compra", "0,1 BTC => 500 USDT");
-        agregarCriptomoneda ("12/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("22/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("12/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("1602/2025", "10:00", "Compra", "0,1 BTC => 500 USDT");
-        agregarCriptomoneda ("12/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("12/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("12/02/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("12/05/2025", "10:00", "Compra", "0,1 BTC");
-        agregarCriptomoneda ("12/02/2025", "10:00", "Compra", "0,1 BTC");
         
         // Botón Volver
         btnVolver = new JButton("Volver");
@@ -96,7 +81,7 @@ public class PanelMisOperaciones extends JPanel {
         return lista;
     }
     public void agregarCriptomoneda(String fecha, String hora, String tipo, String cantidad) {
-        modeloLista.addElement(fecha + " - " + hora + " - " + tipo + "-" + cantidad);
+        modeloLista.addElement(fecha + " - " + hora + " - " + tipo + " - " + cantidad);
     }
     public DefaultListModel<String> getModeloLista() {
         return modeloLista;
