@@ -6,7 +6,7 @@ import javax.swing.JOptionPane;
 @SuppressWarnings("serial")
 public class NoAceptoTerminosException extends ExceptionAbstract {
 	
-	private final String cuerpo = "debe aceptar los terminos y condiciones ";
+	private final String cuerpo = "Debe aceptar los terminos y condiciones ";
 	private final String titulo = "Aceptacion de terminos";
 	private final int icono = JOptionPane.ERROR_MESSAGE;
 	
