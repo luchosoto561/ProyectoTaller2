@@ -130,4 +130,47 @@ public class MonedaDAOJDBC implements MonedaDAO {
 	        }
 	    }
 	}
+	public double getStock(String nombre) {
+        String sql = "SELECT STOCK FROM MONEDA WHERE NOMBRE = ?";
+        try (PreparedStatement pstmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(sql)) {
+            pstmt.setString(1, nombre);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getDouble("STOCK");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1; // Retorna -1 si no se encuentra la moneda
+    }
+	public Moneda getMoneda(String nomenclatura) {
+	    Moneda moneda = null;
+	    String sql = "SELECT * FROM MONEDA WHERE NOMENCLATURA = ?";
+
+	    try {
+	    	 Connection connection = DataBaseConnection.getInstancia().getConexion();
+	         PreparedStatement pstmt = connection.prepareStatement(sql); 
+	        
+	         pstmt.setString(1, nomenclatura);
+	         ResultSet rs = pstmt.executeQuery();
+
+	         if (rs.next()) {
+	             int id = rs.getInt("ID");
+	             String tipo = rs.getString("TIPO");
+	             String nombre = rs.getString("NOMBRE");
+	             float valorDolar = rs.getFloat("VALOR_DOLAR");
+	             float volatilidad = rs.getFloat("VOLATILIDAD");
+	             double stock = rs.getDouble("STOCK");
+	             String nombreIcono = rs.getString("NOMBRE_ICONO");
+
+	            moneda = new Moneda(id, tipo, nombre, nomenclatura, valorDolar, volatilidad, stock, nombreIcono);
+	        }
+	        rs.close();
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    }
+
+	    return moneda;
+	}
 }

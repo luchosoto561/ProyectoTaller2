@@ -1,5 +1,11 @@
 package clasesDAO;
 
-public interface ActivoFiatDAO {
+import java.util.List;
 
+import clases.ActivoFiat;
+
+public interface ActivoFiatDAO {
+	public List<ActivoFiat> traerActivosFiat(int idUsuario);
+	public void generarCantAleatorio(int idUsuario);
+	
 }

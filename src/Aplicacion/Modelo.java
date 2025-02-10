@@ -130,6 +130,103 @@ public class Modelo {
 	public ApInfoCripto getApInfoCripto() {
 		return this.apInfoCripto;
 	}
+	public void comprar(ActivoFiat activoFiat, Moneda monedaComprar) throws SQLException {
+	    Connection connection = null; // Suponiendo que tienes una conexión abierta
+	    PreparedStatement stmt;
+	    ResultSet rs;
+	    
+	    // 1. Obtener el valor de la moneda activa Fiat (en USD) y la moneda a comprar (también en USD)
+	    String queryFiat = "SELECT M.VALOR_DOLAR FROM MONEDA M WHERE M.ID = ?";
+	    stmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(queryFiat);
+	    stmt.setInt(1, activoFiat.getIdMoneda()); // Obtenemos la moneda asociada al activoFiat
+	    rs = stmt.executeQuery();
+	    
+	    if (rs.next()) {
+	        double valorFiatDolar = rs.getDouble("VALOR_DOLAR"); // Precio en dólares de la moneda Fiat
+	        
+	        // 2. Obtener el valor de la moneda a comprar (en USD)
+	        String queryCompra = "SELECT M.VALOR_DOLAR FROM MONEDA M WHERE M.ID = ?";
+	        stmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(queryCompra);
+	        stmt.setInt(1, monedaComprar.getId()); // Obtenemos la moneda que se desea comprar
+	        rs = stmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            double valorCompraDolar = rs.getDouble("VALOR_DOLAR"); // Precio en dólares de la moneda a comprar
+	            
+	            // 3. Calcular la cantidad de moneda a comprar
+	            double cantidadComprar = (activoFiat.getCantidad() * valorFiatDolar) / valorCompraDolar;
+	            
+	            // 4. Crear un nuevo activo cripto (por ejemplo, con la moneda comprada)
+	            String insertActivoCripto = "INSERT INTO ACTIVO_CRIPTO (ID_USUARIO, ID_MONEDA, CANTIDAD) VALUES (?, ?, ?)";
+	            PreparedStatement insertStmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(insertActivoCripto);
+	            insertStmt.setInt(1, activoFiat.getIdUsuario()); // Usuario que realiza la compra
+	            insertStmt.setInt(2, monedaComprar.getId());    // Moneda comprada
+	            insertStmt.setDouble(3, cantidadComprar);       // Cantidad comprada
+	            
+	            // 5. Guardar el nuevo activo en la base de datos
+	            insertStmt.executeUpdate();
+	            
+	            // Cerramos los recursos
+	            rs.close();
+	            stmt.close();
+	            insertStmt.close();
+	        } else {
+	            System.out.println("No se pudo encontrar el valor de la moneda a comprar.");
+	        }
+	    } else {
+	        System.out.println("No se pudo encontrar el valor de la moneda Fiat.");
+	    }
+	}
+	public ActivoFiat tengoActivo(String nomenclatura, double cantidad) throws SQLException {
+		/*tengo que ver si en la base de datos tengo el activo con el cual pretendo pagar(que es un activo fiat), si lo tengo creo un activo el cual voy a retornar con la cantidad que pague 
+		 * y todo lo que tiene este activo, ademas le resto al activo que tengo en la base de datos la cantidad, es decir pago ahora. si no lo tengo devuelvo null*/
+	    Connection connection = null; // Suponiendo que tienes alguna forma de obtener la conexión
+	    PreparedStatement stmt;
+	    ResultSet rs;
+	    
+	    // Buscar el activo Fiat en la base de datos con la nomenclatura dada
+	    String query = "SELECT AF.ID, AF.ID_USUARIO, AF.ID_MONEDA, AF.CANTIDAD, M.NOMENCLATURA "
+	                 + "FROM ACTIVO_FIAT AF "
+	                 + "JOIN MONEDA M ON AF.ID_MONEDA = M.ID "
+	                 + "WHERE M.NOMENCLATURA = ?"; // Filtramos por la nomenclatura
+	    stmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(query);
+	    stmt.setString(1, nomenclatura); // Pasamos la nomenclatura como parámetro
+	    rs = stmt.executeQuery();
+	    
+	    if (rs.next()) {
+	        // Si encontramos el activo en la base de datos
+	        double cantidadActual = rs.getDouble("CANTIDAD");
+	        
+	        if (cantidadActual >= cantidad) {
+	            // Si hay suficiente cantidad para realizar el pago
+	            // Actualizamos la base de datos restando la cantidad
+	            String updateQuery = "UPDATE ACTIVO_FIAT SET CANTIDAD = CANTIDAD - ? WHERE ID = ?";
+	            PreparedStatement updateStmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(updateQuery);
+	            updateStmt.setDouble(1, cantidad);
+	            updateStmt.setInt(2, rs.getInt("ID"));
+	            updateStmt.executeUpdate();
+	            
+	            // Creamos el nuevo activo para devolver
+	            ActivoFiat activoFiat = new ActivoFiat(rs.getInt("ID"), rs.getInt("ID_USUARIO"), rs.getInt("ID_MONEDA"), cantidad);
+	            
+	            // Cerramos los recursos
+	            rs.close();
+	            stmt.close();
+	            
+	            return activoFiat; // Retornamos el nuevo activo con la cantidad pagada
+	        } else {
+	            // No hay suficiente cantidad, devolvemos null
+	            rs.close();
+	            stmt.close();
+	            return null;
+	        }
+	    } else {
+	        // No se encontró el activo Fiat con la nomenclatura dada
+	        rs.close();
+	        stmt.close();
+	        return null;
+	    }
+	}
 }
 
 	

@@ -1,5 +1,9 @@
 package Aplicacion;
 
+import Exceptions.NoPuedoPagarException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
@@ -22,6 +26,7 @@ import clases.ApInfoCripto;
 
 import java.lang.*;
 import java.util.concurrent.TimeUnit;
+import java.sql.*;
 
 public class Controlador {
 	
@@ -70,8 +75,6 @@ public class Controlador {
 		vista.getPanelMisOperaciones().getBtnCerrarSesion().addActionListener(new BotonCerrarPanelMenu());
 		vista.getPanelCotizaciones().getBtnCerrarSesion().addActionListener(new BotonCerrarPanelMenu());
 		
-		this.actualizarThread= new ActualizarThread();
-		
 		vista.getPanelCotizaciones().getCompraBTC().addActionListener(new CompraBTC());
 		configurarMouseListener3(vista.getPanelCotizaciones().getCompraBTC());
 		vista.getPanelCotizaciones().getCompraETH().addActionListener(new CompraETH());
@@ -89,6 +92,8 @@ public class Controlador {
 		configurarMouseListener(vista.getPanelCompra().getBtnCompra());
 		vista.getPanelCompra().getBtnConvertir().addActionListener(new Convertir());
 		configurarMouseListener3(vista.getPanelCompra().getBtnConvertir());
+		
+		this.actualizarThread= new ActualizarThread();
     }
 	
 
@@ -242,9 +247,9 @@ public class Controlador {
 	
 	public class CompraBTC implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			cripto = "Bitcoin (BTC)";
+			cripto = "BTC";
 			precio = vista.getPanelCotizaciones().getPrecioBTC().getText();
-			//falta agregar un metodo que chequee el stock
+			modelo.getMonedaDAO().getStock(cripto);
 			vista.getPanelCompra().setStock("1000", cripto);
 			vista.getPanelCompra().setPrecio(precio);
 			vista.mostrarPanel (vista.getPanelCompra());
@@ -252,9 +257,9 @@ public class Controlador {
 	}
 	public class CompraETH implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			cripto = "Ethereum (ETH)";
+			cripto = "ETH";
 			precio = vista.getPanelCotizaciones().getPrecioETH().getText();
-			//falta agregar un metodo que chequee el stock
+			modelo.getMonedaDAO().getStock(cripto);
 			vista.getPanelCompra().setStock("1000", cripto);
 			vista.getPanelCompra().setPrecio(precio);
 			vista.mostrarPanel (vista.getPanelCompra());
@@ -262,9 +267,9 @@ public class Controlador {
 	}
 	public class CompraUSDC implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			cripto = "Usdc (USDC)";
+			cripto = "USDC";
 			precio = vista.getPanelCotizaciones().getPrecioUSDC().getText();
-			//falta agregar un metodo que chequee el stock
+			modelo.getMonedaDAO().getStock(cripto);
 			vista.getPanelCompra().setStock("1000", cripto);
 			vista.getPanelCompra().setPrecio(precio);
 			vista.mostrarPanel (vista.getPanelCompra());
@@ -272,9 +277,9 @@ public class Controlador {
 	}
 	public class CompraUSDT implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			cripto = "Tether (USDT)";
+			cripto = "USDT";
 			precio = vista.getPanelCotizaciones().getPrecioUSDT().getText();
-			//falta agregar un metodo que chequee el stock
+			modelo.getMonedaDAO().getStock(cripto);
 			vista.getPanelCompra().setStock("1000", cripto);
 			vista.getPanelCompra().setPrecio(precio);
 			vista.mostrarPanel (vista.getPanelCompra());
@@ -282,30 +287,54 @@ public class Controlador {
 	}
 	public class CompraDOGE implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			cripto = "Dogecoin (DOGE)";
+			cripto = "DOGE";
 			precio = vista.getPanelCotizaciones().getPrecioDOGE().getText();
-			//falta agregar un metodo que chequee el stock
-			vista.getPanelCompra().setStock("1000", cripto);
+			vista.getPanelCompra().setStock(" "+ modelo.getMonedaDAO().getStock(cripto), cripto);
 			vista.getPanelCompra().setPrecio(precio);
 			vista.mostrarPanel (vista.getPanelCompra());
 		}
 	}
 	
 	
-	public class Comprar implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			//falta chequear si se puede comprar y hacerle una exception si no
-			String fecha = "08/02/2025";
-			String hora = "20:12";
-			String cantidad = vista.getPanelCompra().getEqui().getText();
-			if (cantidad != "" && cantidad != "0.0 Bitcoin (BTC)" && cantidad != "0.0 Ethereum (ETH)" && cantidad != "0.0 Tether (USDT)" && cantidad != "0.0 Usdc (USDC)" && cantidad != "0.0 Dogecoin (DOGE)"){
-				vista.getPanelMisOperaciones().agregarCriptomoneda(fecha, hora, "Compra", cantidad);
-			}
-			vista.mostrarPanel(vista.getPanelCotizaciones());
-			vista.getPanelCompra().setEqui("", "");
-			vista.getPanelCompra().getCant().setText("0");
-		}
+	public class Comprar implements ActionListener {
+	    public void actionPerformed(ActionEvent e) {
+	        try {
+	            // Falta chequear si se puede comprar y hacerle una excepción si no es posible
+	            LocalDateTime ahora = LocalDateTime.now();
+	            DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+	            DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss");
+
+	            ActivoFiat activoFiat = modelo.tengoActivo("nomenclaturaActivoConElQuePago", 0.0); // Activo con el cual ya pagué
+	            if (activoFiat == null) {
+	                throw new NoPuedoPagarException();
+	            } else {
+	                Moneda monedaComprar = modelo.getMonedaDAO().getMoneda("nomenclatura que me traigo de la vista"); // Obtener la moneda desde la vista
+	                modelo.comprar(activoFiat, monedaComprar); // Comprar la moneda
+
+	                // Convertir a String
+	                String fecha = ahora.format(formatoFecha);
+	                String hora = ahora.format(formatoHora);
+	                String cantidad = vista.getPanelCompra().getEqui().getText();
+
+	                if (!cantidad.equals("") && !cantidad.equals("0.0 Bitcoin (BTC)") && !cantidad.equals("0.0 Ethereum (ETH)") &&
+	                    !cantidad.equals("0.0 Tether (USDT)") && !cantidad.equals("0.0 Usdc (USDC)") && !cantidad.equals("0.0 Dogecoin (DOGE)")) {
+	                    vista.getPanelMisOperaciones().agregarCriptomoneda(fecha, hora, "Compra", cantidad);
+	                }
+
+	                vista.mostrarPanel(vista.getPanelCotizaciones());
+	                vista.getPanelCompra().setEqui("", "");
+	                vista.getPanelCompra().getCant().setText("0");
+	            }
+	        } catch (NoPuedoPagarException ex) {
+	            JOptionPane.showMessageDialog(null, "No tienes saldo suficiente para comprar.", "Error", JOptionPane.ERROR_MESSAGE);
+	        } catch (SQLException ex) {
+	            JOptionPane.showMessageDialog(null, "Error en la base de datos: " + ex.getMessage(), "Error SQL", JOptionPane.ERROR_MESSAGE);
+	        } catch (Exception ex) {
+	            JOptionPane.showMessageDialog(null, "Ocurrió un error inesperado: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
 	}
+
 	
 	public class Convertir implements ActionListener{
 		@SuppressWarnings("removal")
