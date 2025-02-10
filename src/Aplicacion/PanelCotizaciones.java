@@ -201,20 +201,20 @@ public class PanelCotizaciones extends JPanel {
         return btnCerrarSesion;
     }
     
-    public void actualizarPrecioBTC(String nuevoTitulo) {
-        lblBitcoinPrecio.setText("$" + nuevoTitulo);
+    public void actualizarPrecioBTC(double precioActualizado) {
+        lblBitcoinPrecio.setText("$" + precioActualizado);
     }
-    public void actualizarPrecioUSDT(String nuevoTitulo) {
-    	lblTetherPrecio.setText("$" + nuevoTitulo);
+    public void actualizarPrecioUSDT(double precioActualizado) {
+    	lblTetherPrecio.setText("$" + precioActualizado);
     }
-    public void actualizarPrecioUSDC(String nuevoTitulo) {
-    	lblUsdcPrecio.setText("$" + nuevoTitulo);
+    public void actualizarPrecioUSDC(double precioActualizado) {
+    	lblUsdcPrecio.setText("$" + precioActualizado);
     }
-    public void actualizarPrecioDOGE(String nuevoTitulo) {
-    	lblDogecoinPrecio.setText("$" + nuevoTitulo);
+    public void actualizarPrecioDOGE(double precioActualizado) {
+    	lblDogecoinPrecio.setText("$" + precioActualizado);
     }
-    public void actualizarPrecioETH(String nuevoTitulo) {
-    	lblEthereumPrecio.setText("$" + nuevoTitulo);
+    public void actualizarPrecioETH(double precioActualizado) {
+    	lblEthereumPrecio.setText("$" + precioActualizado);
     }
 
     // Clase interna para renderizar el botón en la tabla

@@ -6,6 +6,10 @@ import java.util.*;
 import clases.*;
 import java.sql.*;
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.io.FileWriter;
 import clasesDAO.*;
 
@@ -19,7 +23,7 @@ public class Modelo {
 	private ActivoCriptoDAOJDBC activoCriptoDAO;
 	private ActivoFiatDAOJDBC activoFiatDAO;
 	private TransaccionDAOJDBC transaccionDAO;
-	
+	private ApInfoCripto apInfoCripto;
 	
 	public Modelo(UserDAOJDBC usuarioDAO, PersonaDAOJDBC personaDAO,MonedaDAOJDBC monedaDAO, ActivoCriptoDAOJDBC activoCriptoDAO, ActivoFiatDAOJDBC activoFiatDAO,TransaccionDAOJDBC transaccionDAO) {
 		super();
@@ -119,38 +123,13 @@ public class Modelo {
 	public List<ActivoFiat> listarActivoFiat(){
 		return activoFiatDAO.traerActivosFiat(usuario.getId());
 	}
-	/*public void ConsultarPrecioCripto() {
-		
-		private static final String URL_API = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,usd-coin,tether,dogecoin&vs_currencies=usd";
-		HttpClient cliente = HttpClient.newHttpClient();
-		HttpRequest solicitud = HttpRequest.newBuilder().uri(URI.create(URL_API)).GET().build();
-			try {
-		           HttpResponse<String> respuesta = cliente.send(solicitud, HttpResponse.BodyHandlers.ofString());
-		           
-		           if (respuesta.statusCode() == 200) {
-		               parsearYMostrarPrecios(respuesta.body());
-		           } else {
-		               System.out.println("Error: " + respuesta.statusCode());
-		           }
-		       } catch (IOException | InterruptedException e) {
-		           e.printStackTrace();
-		       }
 	
-	}*/
-	/*private void parsearYMostrarPrecios(String cuerpoRespuesta) {
-		 JSONObject json = new JSONObject(cuerpoRespuesta);
-	     System.out.println("Precios de Criptomonedas (en USD):");
-	     double precioBTC = json.getJSONObject("bitcoin").getDouble("usd");
-	     System.out.println("BTC: $" + precioBTC);
-	     double precioETH = json.getJSONObject("ethereum").getDouble("usd");
-	     System.out.println("ETH: $" + precioETH);
-	     double precioUSDC = json.getJSONObject("usd-coin").getDouble("usd");
-	     System.out.println("USDC: $" + precioUSDC);
-	     double precioUSDT = json.getJSONObject("tether").getDouble("usd");
-	     System.out.println("USDT: $" + precioUSDT);
-	     double precioDOGE = json.getJSONObject("dogecoin").getDouble("usd");
-	     System.out.println("DOGE: $" + precioDOGE);
-	}*/
+	public MonedaDAOJDBC getMonedaDAO() {
+		return this.monedaDAO;
+	}
+	public ApInfoCripto getApInfoCripto() {
+		return this.apInfoCripto;
+	}
 }
 
 	

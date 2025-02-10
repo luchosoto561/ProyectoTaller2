@@ -1,7 +1,5 @@
 package Aplicacion;
 
-import javax.swing.*;
-
 import clasesDAO.ActivoCriptoDAOJDBC;
 import clasesDAO.ActivoFiatDAOJDBC;
 import clasesDAO.MonedaDAOJDBC;
@@ -9,13 +7,11 @@ import clasesDAO.PersonaDAOJDBC;
 import clasesDAO.TransaccionDAOJDBC;
 import clasesDAO.UserDAOJDBC;
 import gestoresDAO.DataBaseConnection;
-
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class main {
+public class Principal {
 	
 	private static void creaciónDeTablasEnBD(Connection connection) throws SQLException {
 		Statement stmt;
@@ -72,7 +68,7 @@ public class main {
 				+ "("
 				+ " ID     INTEGER   PRIMARY KEY AUTOINCREMENT NOT NULL , "
 				+ " RESUMEN VARCHAR(1000)   NOT NULL, "
-				+ " FECHA_HORA		DATETIME  NOT NULL, "
+				+ " FECHA_HORA	DATETIME  NOT NULL, "
 				+ " ID_USUARIO INTEGER    NOT NULL, "
 				+ " FOREIGN KEY(ID_USUARIO) REFERENCES USUARIO(ID)"
 				+ ")";

@@ -91,5 +91,43 @@ public class MonedaDAOJDBC implements MonedaDAO {
 	        }
 	    }
 	}
+	
+	public void actualizarPrecio(String nombreMoneda, double precioRespectoDolar) {
+	    // Conectar con la base de datos
+	    Connection connection = null;
+	    PreparedStatement pstmt = null;
 
+	    try {
+	        // Asumiendo que ya tienes un método para obtener la conexión
+	        connection = DataBaseConnection.getInstancia().getConexion(); // Método ficticio que obtendría la conexión a tu BD
+	        
+	        // Obtener todas las monedas (usando el nombreMoneda si es necesario)
+	        String sqlSelect = "SELECT * FROM MONEDA WHERE NOMBRE = ?";
+	        pstmt = connection.prepareStatement(sqlSelect);
+	        pstmt.setString(1, nombreMoneda);
+	        ResultSet rs = pstmt.executeQuery();
+
+	        // Verificamos si la moneda existe
+	        if (rs.next()) {
+	            // Actualizamos el precio en la base de datos
+	            String sqlUpdate = "UPDATE MONEDA SET VALOR_DOLAR = ? WHERE NOMBRE = ?";
+	            pstmt = connection.prepareStatement(sqlUpdate);
+	            pstmt.setDouble(1, precioRespectoDolar);
+	            pstmt.setString(2, nombreMoneda);
+	            pstmt.executeUpdate();
+	        }
+	    } catch (SQLException ex) {
+	            ex.printStackTrace();
+	    }
+	      finally {
+	        // Cerrar recursos
+	        try {
+	            if (pstmt != null) {
+	                pstmt.close();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
 }

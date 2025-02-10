@@ -10,21 +10,8 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
-		<buildCommand>
-			<name>org.eclipse.m2e.core.maven2Builder</name>
-			<arguments>
-			</arguments>
-		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
-	<linkedResources>
-		<link>
-			<name>src/lib/json-20250107.jar</name>
-			<type>1</type>
-			<location>C:/Users/Usuario/Downloads/json-20250107.jar</location>
-		</link>
-	</linkedResources>
 </projectDescription>

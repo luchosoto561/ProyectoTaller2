@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 import Exceptions.CompletarCamposException;
 import Exceptions.DatosNoValidosException;
@@ -17,16 +18,22 @@ import Exceptions.NoAceptoTerminosException;
 import clases.ActivoCripto;
 import clases.ActivoFiat;
 import clases.Moneda;
+import clases.ApInfoCripto;
+
+import java.lang.*;
+import java.util.concurrent.TimeUnit;
 
 public class Controlador {
 	
 	private Vista vista;
 	@SuppressWarnings("unused")
 	private Modelo modelo;
+	private ActualizarThread actualizarThread;
 	
 	public Controlador(Vista vista, Modelo modelo) {
 		this.vista = vista;
 		this.modelo = modelo;
+		
 		
 		vista.getPanelPrincipal().getRegistrarseButton().addActionListener(new BotonRegistrarsePanelPrincipal());
 		vista.getPanelPrincipal().getLoginButton().addActionListener(new BotonIniciarSesionPanelPrincipal());
@@ -61,6 +68,8 @@ public class Controlador {
 
 		vista.getPanelMisOperaciones().getBtnCerrarSesion().addActionListener(new BotonCerrarPanelMenu());
 		vista.getPanelCotizaciones().getBtnCerrarSesion().addActionListener(new BotonCerrarPanelMenu());
+		
+		this.actualizarThread= new ActualizarThread();
 		
     }
 	
@@ -206,6 +215,13 @@ public class Controlador {
 		
 		
 	}
+	public class BotonRealizarCompra implements ActionListener{
+		public void actionPerformed(ActionEvent e) {
+			/**/
+		}
+		
+		
+	}
 	public void cargarPanelActivos() {
 		
 		List<ActivoCripto> activosCripto = modelo.listarActivoCripto();/*me tengo que traer los activos cripto de todo el usuario*/ 
@@ -222,4 +238,38 @@ public class Controlador {
 			vista.getPanelActivos().agregarFila(monedas.get(af.getId()-1).getId(), monedas.get(af.getId()-1).getNombre(), af.getCantidad() * monedas.get(af.getId()-1).getValorDolar());
 		}
 	}
+	public class ActualizarThread extends Thread {
+		/*osea nuestra clase extiende de una clase diseniada para ejecutar hilos en paralelo del hilo del main*/
+		private ApInfoCripto apInfoCripto;
+		
+		public ActualizarThread() {
+			this.apInfoCripto = modelo.getApInfoCripto();
+		}
+
+		@Override
+		public void run() {
+			apInfoCripto.actualizarApiCriptos();
+		    if (apInfoCripto.getJson() != null) {
+		    	modelo.getMonedaDAO().actualizarPrecio("BTC", apInfoCripto.getBTC());
+		    	modelo.getMonedaDAO().actualizarPrecio("ETH", apInfoCripto.getETH());
+		        modelo.getMonedaDAO().actualizarPrecio("USDC", apInfoCripto.getUSDC());
+		        modelo.getMonedaDAO().actualizarPrecio("USDT", apInfoCripto.getUSDT());
+		        modelo.getMonedaDAO().actualizarPrecio("DOGE", apInfoCripto.getDOGE());
+		        SwingUtilities.invokeLater(() -> {/*es donde cargo en la tabla de cotizaciones la informacion renovada*/
+		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getBTC(), 0,0 );
+		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getDOGE(), 0, 0);
+		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getETH(), 0,0 );
+		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getUSDC(),0 , 0);
+		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getUSDT(), 0,0 );
+		        });
+		            }
+
+		            try {
+		                TimeUnit.SECONDS.sleep(30);
+		            } catch (InterruptedException e) {
+		                e.printStackTrace();
+		            }
+		    }
+	}
 }
+
