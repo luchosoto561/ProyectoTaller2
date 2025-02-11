@@ -3,7 +3,7 @@ package Aplicacion;
 import Exceptions.NoPuedoPagarException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
+import clases.Transaccion;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
@@ -11,10 +11,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-
 import Exceptions.CompletarCamposException;
 import Exceptions.DatosNoValidosException;
 import Exceptions.ExceptionAbstract;
@@ -23,8 +21,6 @@ import clases.ActivoCripto;
 import clases.ActivoFiat;
 import clases.Moneda;
 import clases.ApInfoCripto;
-
-import java.lang.*;
 import java.util.concurrent.TimeUnit;
 import java.sql.*;
 
@@ -94,6 +90,7 @@ public class Controlador {
 		configurarMouseListener3(vista.getPanelCompra().getBtnConvertir());
 		
 		this.actualizarThread= new ActualizarThread();
+		actualizarThread.run();
     }
 	
 
@@ -160,6 +157,7 @@ public class Controlador {
 				if ( ! modelo.existeCuenta(vista.getPanelPrincipal().getGmail().getText(), new String(vista.getPanelPrincipal().getPassword().getPassword())))/*si no esta en la base de datos lanzamos error*/
 					throw new DatosNoValidosException();
 				cargarPanelActivos();
+				cargarPanelMisOperaciones();
 				vista.mostrarPanel(vista.getPanelActivos());/*muestra el panel de los activos*/
 			}
 			catch (ExceptionAbstract x) {
@@ -196,8 +194,6 @@ public class Controlador {
 			}
 		}
 	}
-	
-/*--------------------------------------------------------------------------------------------------------------------------------------------------, aca me quede*/	
 	public class BotonCuentaPanelRegistro implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
 			vista.mostrarPanel(vista.getPanelPrincipal());
@@ -299,16 +295,15 @@ public class Controlador {
 	public class Comprar implements ActionListener {
 	    public void actionPerformed(ActionEvent e) {
 	        try {
-	            // Falta chequear si se puede comprar y hacerle una excepción si no es posible
 	            LocalDateTime ahora = LocalDateTime.now();
 	            DateTimeFormatter formatoFecha = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 	            DateTimeFormatter formatoHora = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-	            ActivoFiat activoFiat = modelo.tengoActivo("nomenclaturaActivoConElQuePago", 0.0); // Activo con el cual ya pagué
+	            ActivoFiat activoFiat = modelo.tengoActivo((String) vista.getPanelCompra().getOpcion().getSelectedItem(), Double.parseDouble(vista.getPanelCompra().getCant().getText())); // Activo con el cual ya pagué
 	            if (activoFiat == null) {
 	                throw new NoPuedoPagarException();
 	            } else {
-	                Moneda monedaComprar = modelo.getMonedaDAO().getMoneda("nomenclatura que me traigo de la vista"); // Obtener la moneda desde la vista
+	                Moneda monedaComprar = modelo.getMonedaDAO().getMoneda(cripto); // Obtener la moneda desde la vista
 	                modelo.comprar(activoFiat, monedaComprar); // Comprar la moneda
 
 	                // Convertir a String
@@ -319,6 +314,7 @@ public class Controlador {
 	                if (!cantidad.equals("") && !cantidad.equals("0.0 Bitcoin (BTC)") && !cantidad.equals("0.0 Ethereum (ETH)") &&
 	                    !cantidad.equals("0.0 Tether (USDT)") && !cantidad.equals("0.0 Usdc (USDC)") && !cantidad.equals("0.0 Dogecoin (DOGE)")) {
 	                    vista.getPanelMisOperaciones().agregarCriptomoneda(fecha, hora, "Compra", cantidad);
+	                    modelo.getTransaccionDAO().cargarTransaccion(modelo.getUsuario().getId(), fecha + " - " + hora + " - " + "Compra" + " - " + cantidad, ahora);
 	                }
 
 	                vista.mostrarPanel(vista.getPanelCotizaciones());
@@ -367,13 +363,9 @@ public class Controlador {
 		
 		
 	}
-	public class BotonRealizarCompra implements ActionListener{
-		public void actionPerformed(ActionEvent e) {
-			/**/
-		}
 		
 		
-	}
+	
 	public void cargarPanelActivos() {
 		
 		List<ActivoCripto> activosCripto = modelo.listarActivoCripto();/*me tengo que traer los activos cripto de todo el usuario*/ 
@@ -390,8 +382,15 @@ public class Controlador {
 			vista.getPanelActivos().agregarFila(monedas.get(af.getId()-1).getId(), monedas.get(af.getId()-1).getNombre(), af.getCantidad() * monedas.get(af.getId()-1).getValorDolar());
 		}
 	}
+	public void cargarPanelMisOperaciones() {
+		
+		List<Transaccion> lista = modelo.getTransaccionDAO().actualizarTransacciones();/*tengo que ver que onda con lista, osea es un linkedlist?*/
+		for(Transaccion t: lista) {
+			vista.getPanelMisOperaciones().agregarCriptomoneda2(t.getResumen());
+			
+		}
+	}
 	public class ActualizarThread extends Thread {
-		/*osea nuestra clase extiende de una clase diseniada para ejecutar hilos en paralelo del hilo del main*/
 		private ApInfoCripto apInfoCripto;
 		
 		public ActualizarThread() {
@@ -400,7 +399,7 @@ public class Controlador {
 
 		@Override
 		public void run() {
-			apInfoCripto.actualizarApiCriptos();
+			apInfoCripto.consultarPrecioCripto();
 		    if (apInfoCripto.getJson() != null) {
 		    	modelo.getMonedaDAO().actualizarPrecio("BTC", apInfoCripto.getBTC());
 		    	modelo.getMonedaDAO().actualizarPrecio("ETH", apInfoCripto.getETH());
@@ -408,11 +407,11 @@ public class Controlador {
 		        modelo.getMonedaDAO().actualizarPrecio("USDT", apInfoCripto.getUSDT());
 		        modelo.getMonedaDAO().actualizarPrecio("DOGE", apInfoCripto.getDOGE());
 		        SwingUtilities.invokeLater(() -> {/*es donde cargo en la tabla de cotizaciones la informacion renovada*/
-		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getBTC(), 0,0 );
-		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getDOGE(), 0, 0);
-		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getETH(), 0,0 );
-		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getUSDC(),0 , 0);
-		        	vista.getPanelCotizaciones().getTablaCotizaciones().getModel().setValueAt(apInfoCripto.getUSDT(), 0,0 );
+		        	vista.getPanelCotizaciones().actualizarPrecioBTC(apInfoCripto.getBTC());
+		        	vista.getPanelCotizaciones().actualizarPrecioDOGE(apInfoCripto.getDOGE());
+		        	vista.getPanelCotizaciones().actualizarPrecioETH(apInfoCripto.getETH());
+		        	vista.getPanelCotizaciones().actualizarPrecioUSDT(apInfoCripto.getUSDT());
+		        	vista.getPanelCotizaciones().actualizarPrecioUSDC(apInfoCripto.getUSDC());
 		        });
 		            }
 

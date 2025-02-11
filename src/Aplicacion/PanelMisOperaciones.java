@@ -83,6 +83,9 @@ public class PanelMisOperaciones extends JPanel {
     public void agregarCriptomoneda(String fecha, String hora, String tipo, String cantidad) {
         modeloLista.addElement(fecha + " - " + hora + " - " + tipo + " - " + cantidad);
     }
+    public void agregarCriptomoneda2(String elemento) {
+        modeloLista.addElement(elemento);
+    }
     public DefaultListModel<String> getModeloLista() {
         return modeloLista;
     }

@@ -12,12 +12,6 @@ public class Transaccion {
 		this.fechayHs = fechayHs;
 		this.idUsuario = idUsuario;
 	}
-	public int getId() {
-		return id;
-	}
-	public void setId(int id) {
-		this.id = id;
-	}
 	public String getResumen() {
 		return resumen;
 	}
@@ -33,10 +27,9 @@ public class Transaccion {
 	public int getIdUsuario() {
 		return idUsuario;
 	}
-	public void setIdUsuario(int idUsuario) {
+	public void setId(int idUsuario) {
 		this.idUsuario = idUsuario;
 	}
-	
 	
 
 }

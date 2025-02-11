@@ -173,4 +173,50 @@ public class MonedaDAOJDBC implements MonedaDAO {
 
 	    return moneda;
 	}
+	public void cargarmonedas() {
+	    // Array de monedas con la información que queremos cargar
+	    String[][] monedas = {
+	        {"C", "Bitcoin", "BTC", "9728.37", "0.0", "0.0", "bitcoin.png"},
+	        {"C", "Ethereum", "ETH", "2661.6", "0.0", "0.0", "ethereum.png"},
+	        {"C", "Tether", "USDT", "1.0", "0.0", "0.0", "tether.png"},
+	        {"C", "Dogecoin", "DOGE", "0.2496", "0.0", "0.0", "dogecoin.png"},
+	        {"F", "Dólar", "USD", "1.0", "0.0", "0.0", "dolar.png"},
+	        {"F", "Euro", "EUR", "1.03", "0.0", "0.0", "euro.png"},
+	        {"F", "Yen Japonés", "JPY", "0.009", "0.0", "0.0", "yen.png"},
+	        {"C", "USD coin", "USDC", "1.35", "0.0", "0.0", "libra.png"},
+	        {"F", "Peso Argentino", "ARS", "0.001", "0.0", "0.0", "peso.png"}
+	    };
+
+	    PreparedStatement stmt = null;
+
+	    try {
+	        // Iterar sobre el array de monedas y crear una inserción para cada una
+	        String sql = "INSERT INTO MONEDA (TIPO, NOMBRE, NOMENCLATURA, VALOR_DOLAR, VOLATILIDAD, STOCK, NOMBRE_ICONO) "
+	                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+	        stmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(sql);
+
+	        for (String[] moneda : monedas) {
+	            stmt.setString(1, moneda[0]);          // TIPO
+	            stmt.setString(2, moneda[1]);          // NOMBRE
+	            stmt.setString(3, moneda[2]);          // NOMENCLATURA
+	            stmt.setDouble(4, Double.parseDouble(moneda[3])); // VALOR_DOLAR
+	            stmt.setDouble(5, Double.parseDouble(moneda[4])); // VOLATILIDAD
+	            stmt.setDouble(6, Double.parseDouble(moneda[5])); // STOCK
+	            stmt.setString(7, moneda[6]);          // NOMBRE_ICONO
+	            stmt.executeUpdate();
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("Error al cargar monedas: " + e.getMessage());
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (stmt != null) {
+	                stmt.close();
+	            }
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+
 }

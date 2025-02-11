@@ -33,6 +33,8 @@ public class Modelo {
 		this.activoCriptoDAO = activoCriptoDAO;
 		this.activoFiatDAO = activoFiatDAO;
 		this.transaccionDAO = transaccionDAO;
+		monedaDAO.cargarmonedas();
+		apInfoCripto = new ApInfoCripto();
 	}
 
 	public boolean existeCuenta(String gmail, String password) {
@@ -226,6 +228,12 @@ public class Modelo {
 	        stmt.close();
 	        return null;
 	    }
+	}
+	public TransaccionDAOJDBC getTransaccionDAO() {
+		return this.transaccionDAO;
+	}
+	public User getUsuario() {
+		return usuario;
 	}
 }
 
