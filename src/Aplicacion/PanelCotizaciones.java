@@ -48,6 +48,11 @@ public class PanelCotizaciones extends JPanel {
         panelBitcoin.setBounds(20, 80, 550, 50);
 
         //agregar imagen Bitcoin
+	//ImageIcon fotoBTC = new ImageIcon("");
+	//Image fotoBTC = fotoBTC.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH); // Escalar imagen
+	//JLabel lblBitcoin = new JLabel(new ImageIcon(fotoBTC));
+	//lblBitcoin.setBounds(10, 10, 30, 30); // Posición en el panel
+	//add(lblBitcoin);
         
         JLabel lblBitcoinNombre = new JLabel("Bitcoin (BTC)");
         lblBitcoinNombre.setFont(new Font("Arial", Font.BOLD, 14));
