@@ -31,25 +31,31 @@ public class TransaccionDAOJDBC implements TransaccionDAO {
 	        e.printStackTrace();
 	    }
 	}
-	public List<Transaccion> actualizarTransacciones() {
+	public List<Transaccion> actualizarTransacciones(int idUsuario) {
 	    List<Transaccion> transacciones = new ArrayList<>();
-	    String sql = "SELECT ID, RESUMEN, FECHA_HORA, ID_USUARIO FROM TRANSACCION";
+	    String sql = "SELECT ID, RESUMEN, FECHA_HORA, ID_USUARIO FROM TRANSACCION WHERE ID_USUARIO = ?";
 
-	    try (Statement stmt = DataBaseConnection.getInstancia().getConexion().createStatement();
-	         ResultSet rs = stmt.executeQuery(sql)) {
+	    try {
+	    	 Connection connection = DataBaseConnection.getInstancia().getConexion(); // Asegúrate de tener un método para obtener la conexión
+	         PreparedStatement pstmt = connection.prepareStatement(sql);
+
+	        pstmt.setInt(1, idUsuario);
+	        ResultSet rs = pstmt.executeQuery();
 
 	        while (rs.next()) {
-	            int id = rs.getInt("ID");
-	            String resumen = rs.getString("RESUMEN");
-	            String fechaStr = rs.getString("FECHA_HORA"); // Se mantiene como String
-	            int idUsuario = rs.getInt("ID_USUARIO");
+	            Transaccion transaccion = new Transaccion();
+	            transaccion.setId(rs.getInt("ID"));
+	            transaccion.setResumen(rs.getString("RESUMEN"));
+	            transaccion.setFechayHs(rs.getString("FECHA_HORA"));
+	            transaccion.setIdUsuario(rs.getInt("ID_USUARIO"));
 
-	            transacciones.add(new Transaccion(id, resumen, fechaStr, idUsuario)); // Se pasa como String
+	            transacciones.add(transaccion);
 	        }
 
 	    } catch (SQLException e) {
-	        e.printStackTrace();
+	        e.printStackTrace(); // Manejo de errores, puedes mejorarlo con logs
 	    }
 
 	    return transacciones;
-	}}
+	}
+}

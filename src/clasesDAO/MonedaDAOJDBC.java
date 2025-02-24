@@ -174,7 +174,6 @@ public class MonedaDAOJDBC implements MonedaDAO {
 	    return moneda;
 	}
 	public void cargarmonedas() {
-	    // Array de monedas con la información que queremos cargar
 	    String[][] monedas = {
 	        {"C", "Bitcoin", "BTC", "9728.37", "0.0", "0.0", "bitcoin.png"},
 	        {"C", "Ethereum", "ETH", "2661.6", "0.0", "0.0", "ethereum.png"},
@@ -187,34 +186,70 @@ public class MonedaDAOJDBC implements MonedaDAO {
 	        {"F", "Peso Argentino", "ARS", "0.001", "0.0", "0.0", "peso.png"}
 	    };
 
-	    PreparedStatement stmt = null;
+	    PreparedStatement checkStmt = null;
+	    PreparedStatement insertStmt = null;
+	    ResultSet rs = null;
 
 	    try {
-	        // Iterar sobre el array de monedas y crear una inserción para cada una
-	        String sql = "INSERT INTO MONEDA (TIPO, NOMBRE, NOMENCLATURA, VALOR_DOLAR, VOLATILIDAD, STOCK, NOMBRE_ICONO) "
-	                   + "VALUES (?, ?, ?, ?, ?, ?, ?)";
-	        stmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(sql);
+	        String checkSql = "SELECT COUNT(*) FROM MONEDA WHERE NOMBRE = ?";
+	        String insertSql = "INSERT INTO MONEDA (TIPO, NOMBRE, NOMENCLATURA, VALOR_DOLAR, VOLATILIDAD, STOCK, NOMBRE_ICONO) "
+	                         + "VALUES (?, ?, ?, ?, ?, ?, ?)";
+
+	        checkStmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(checkSql);
+	        insertStmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(insertSql);
 
 	        for (String[] moneda : monedas) {
-	            stmt.setString(1, moneda[0]);          // TIPO
-	            stmt.setString(2, moneda[1]);          // NOMBRE
-	            stmt.setString(3, moneda[2]);          // NOMENCLATURA
-	            stmt.setDouble(4, Double.parseDouble(moneda[3])); // VALOR_DOLAR
-	            stmt.setDouble(5, Double.parseDouble(moneda[4])); // VOLATILIDAD
-	            stmt.setDouble(6, Double.parseDouble(moneda[5])); // STOCK
-	            stmt.setString(7, moneda[6]);          // NOMBRE_ICONO
-	            stmt.executeUpdate();
+	            // Verificar si la moneda ya existe en la base de datos
+	            checkStmt.setString(1, moneda[1]); // NOMBRE
+	            rs = checkStmt.executeQuery();
+	            rs.next();
+	            
+	            if (rs.getInt(1) == 0) { // Si no existe, insertamos
+	                insertStmt.setString(1, moneda[0]);          // TIPO
+	                insertStmt.setString(2, moneda[1]);          // NOMBRE
+	                insertStmt.setString(3, moneda[2]);          // NOMENCLATURA
+	                insertStmt.setDouble(4, Double.parseDouble(moneda[3])); // VALOR_DOLAR
+	                insertStmt.setDouble(5, Double.parseDouble(moneda[4])); // VOLATILIDAD
+	                insertStmt.setDouble(6, Double.parseDouble(moneda[5])); // STOCK
+	                insertStmt.setString(7, moneda[6]);          // NOMBRE_ICONO
+	                insertStmt.executeUpdate();
+	            }
 	        }
 	    } catch (SQLException e) {
 	        System.out.println("Error al cargar monedas: " + e.getMessage());
 	        e.printStackTrace();
 	    } finally {
 	        try {
-	            if (stmt != null) {
-	                stmt.close();
-	            }
+	            if (rs != null) rs.close();
+	            if (checkStmt != null) checkStmt.close();
+	            if (insertStmt != null) insertStmt.close();
 	        } catch (SQLException e) {
 	            e.printStackTrace();
+	        }
+	    }
+	}
+	
+	public double obtenerValorDolar(int idMoneda) throws SQLException {
+	    String sql = "SELECT VALOR_DOLAR FROM MONEDA WHERE ID = ?";
+	    PreparedStatement stmt = null;
+	    ResultSet rs = null;
+
+	    try {
+	        stmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(sql);
+	        stmt.setInt(1, idMoneda);
+	        rs = stmt.executeQuery();
+
+	        if (rs.next()) {
+	            return rs.getDouble("VALOR_DOLAR");
+	        } else {
+	            throw new SQLException("No se encontró la moneda con ID: " + idMoneda);
+	        }
+	    } finally {
+	        if (rs != null) {
+	            rs.close();
+	        }
+	        if (stmt != null) {
+	            stmt.close();
 	        }
 	    }
 	}

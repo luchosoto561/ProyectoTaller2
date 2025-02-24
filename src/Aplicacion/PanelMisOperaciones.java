@@ -95,4 +95,6 @@ public class PanelMisOperaciones extends JPanel {
     public JButton getBtnCerrarSesion() {
         return btnCerrarSesion;
     }
-}
+    public void limpiarPanel() {
+        modeloLista.clear(); // Elimina todos los elementos de la lista
+    }}

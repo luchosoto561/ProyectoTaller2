@@ -49,7 +49,13 @@ public class PanelActivos extends JPanel {
      
         // **Crear la tabla dinámica**
         String[] columnas = {"", "Criptomoneda", "Monto"};
-        modeloTabla = new DefaultTableModel(columnas, 0); // 0 indica que no hay filas iniciales
+        modeloTabla = new DefaultTableModel(columnas, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Todas las celdas son no editables
+            }
+        };
+        
         tabla = new JTable(modeloTabla);
         tabla.setBackground(new Color (245, 245, 220)); //200,150,100
         tabla.setRowHeight(30);
@@ -86,27 +92,6 @@ public class PanelActivos extends JPanel {
         scroll.setBounds(31, 36, 355, 330);
         
         add(scroll);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        this.agregarFila(4, "buitrecoin", 30000);
-        this.agregarFila(7, "dogeperro", 34670);
-        
 
         // Botón Exportar como CSV
         btnExportarCSV = new JButton("Exportar como CSV");
@@ -189,5 +174,9 @@ public class PanelActivos extends JPanel {
 
     public JTable getTblCriptos() {
         return tabla;
+    }
+    public void limpiarTabla() {
+        DefaultTableModel model = (DefaultTableModel) tabla.getModel();
+        model.setRowCount(0); // Elimina todas las filas de la tabla
     }
 }

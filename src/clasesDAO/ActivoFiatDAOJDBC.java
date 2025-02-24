@@ -96,4 +96,86 @@ public class ActivoFiatDAOJDBC implements ActivoFiatDAO {
 	    
 	    return ids;
 	}
+	public void generarActivoFiat(int idUsuario) {
+	    String sqlCheck = "SELECT COUNT(*) FROM ACTIVO_FIAT WHERE ID_USUARIO = ?";
+	    String sqlInsert = "INSERT INTO ACTIVO_FIAT (ID_USUARIO, ID_MONEDA, CANTIDAD) VALUES (?, ?, ?)";
+	    PreparedStatement pstmtCheck = null;
+	    PreparedStatement pstmtInsert = null;
+	    ResultSet rs = null;
+
+	    try {
+	        // Verificar si el usuario ya tiene activos fiat
+	        pstmtCheck = DataBaseConnection.getInstancia().getConexion().prepareStatement(sqlCheck);
+	        pstmtCheck.setInt(1, idUsuario);
+	        rs = pstmtCheck.executeQuery();
+	        
+	        if (rs.next() && rs.getInt(1) > 0) 
+	            return;
+
+	        // Si no tiene activos fiat, proceder con la inserción
+	        int[] idsMonedas = {5, 6, 7, 9};
+	        pstmtInsert = DataBaseConnection.getInstancia().getConexion().prepareStatement(sqlInsert);
+
+	        for (int idMoneda : idsMonedas) {
+	            pstmtInsert.setInt(1, idUsuario);
+	            pstmtInsert.setInt(2, idMoneda);
+	            pstmtInsert.setDouble(3, 0.0);
+	            pstmtInsert.executeUpdate();
+	        }
+
+	    } catch (SQLException e) {
+	        e.printStackTrace();
+	    } finally {
+	        try {
+	            if (rs != null) rs.close();
+	            if (pstmtCheck != null) pstmtCheck.close();
+	            if (pstmtInsert != null) pstmtInsert.close();
+	        } catch (SQLException e) {
+	            e.printStackTrace();
+	        }
+	    }
+	}
+	
+	public ActivoFiat obtenerActivoPorNomenclatura(String nomenclatura) throws SQLException {
+        String query = "SELECT AF.ID, AF.ID_USUARIO, AF.ID_MONEDA, AF.CANTIDAD, M.NOMENCLATURA "
+                     + "FROM ACTIVO_FIAT AF "
+                     + "JOIN MONEDA M ON AF.ID_MONEDA = M.ID "
+                     + "WHERE M.NOMENCLATURA = ?";
+
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+
+        try {
+            stmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(query);
+            stmt.setString(1, nomenclatura);
+            rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                return new ActivoFiat(
+                    rs.getInt("ID"),
+                    rs.getInt("ID_USUARIO"),
+                    rs.getInt("ID_MONEDA"),
+                    rs.getDouble("CANTIDAD")
+                );
+            }
+            return null; // No se encontró el activo
+        } finally {
+            if (rs != null) rs.close();
+            if (stmt != null) stmt.close();
+        }
+    }
+
+    public void actualizarCantidad(int idActivo, double cantidad) throws SQLException {
+        String updateQuery = "UPDATE ACTIVO_FIAT SET CANTIDAD = CANTIDAD - ? WHERE ID = ?";
+        PreparedStatement stmt = null;
+
+        try {
+            stmt = DataBaseConnection.getInstancia().getConexion().prepareStatement(updateQuery);
+            stmt.setDouble(1, cantidad);
+            stmt.setInt(2, idActivo);
+            stmt.executeUpdate();
+        } finally {
+            if (stmt != null) stmt.close();
+        }
+    }
 }

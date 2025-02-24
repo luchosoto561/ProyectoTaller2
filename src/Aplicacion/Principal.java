@@ -77,8 +77,6 @@ public class Principal {
 		stmt.close();
 	}
 	public static void main (String [] args) {
-		 String url = "jdbc:sqlite:mi_base_de_datos.db"; 
-	        
 	        try {
 	            // Llamamos al método pasando la conexión como parámetro
 	            creaciónDeTablasEnBD(DataBaseConnection.getInstancia().getConexion());

@@ -4,9 +4,13 @@ import Exceptions.NoPuedoPagarException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import clases.Transaccion;
+import gestoresDAO.DataBaseConnection;
+
 import java.awt.Color;
 import java.io.IOException;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -21,7 +25,6 @@ import clases.ActivoCripto;
 import clases.ActivoFiat;
 import clases.Moneda;
 import clases.ApInfoCripto;
-import java.util.concurrent.TimeUnit;
 import java.sql.*;
 
 public class Controlador {
@@ -29,13 +32,15 @@ public class Controlador {
 	private Vista vista;
 	@SuppressWarnings("unused")
 	private Modelo modelo;
-	private ActualizarThread actualizarThread;
+	private Timer timer;
 	private String cripto;
 	private String precio;
 	
 	public Controlador(Vista vista, Modelo modelo) {
 		this.vista = vista;
 		this.modelo = modelo;
+		this.timer = new Timer();
+		timer.scheduleAtFixedRate(new ActualizarTask(), 0, 30000); // Cada 30 segundos
 		
 		
 		vista.getPanelPrincipal().getRegistrarseButton().addActionListener(new BotonRegistrarsePanelPrincipal());
@@ -46,15 +51,17 @@ public class Controlador {
         configurarMouseListener2(vista.getPanelPrincipal().getCierreButton());
 		
 		vista.getPanelRegistro().getRegistrarButton().addActionListener(new BotonRegistrarPanelRegistro());
-		vista.getPanelRegistro().getCuentaButton().addActionListener(new BotonCuentaPanelRegistro());/*NO ENTIENDO QUE BOTON ES ESTE*/
+		vista.getPanelRegistro().getCuentaButton().addActionListener(new BotonCuentaPanelRegistro());
 		vista.getPanelRegistro().getCierreButton().addActionListener(new BotonCerrar());
         configurarMouseListener(vista.getPanelRegistro().getRegistrarButton());
         configurarMouseListener(vista.getPanelRegistro().getCuentaButton());
         configurarMouseListener2(vista.getPanelRegistro().getCierreButton());
-		/*hasta aca hice los listeners*/
+
 		vista.getPanelActivos().getBtnCerrarSesion().addActionListener(new BotonCerrarPanelMenu());
 		vista.getPanelActivos().getBtnCotizaciones().addActionListener(new BotonCotizacionesMisActivos());
 		vista.getPanelActivos().getBtnMisOperaciones().addActionListener(new BotonOperacionesMisActivos());
+		vista.getPanelActivos().getBtnGenerarDatos().addActionListener(new BotonGenerarDatos());
+		vista.getPanelActivos().getBtnExportarCSV().addActionListener(new BotonExportarCSV());
 		configurarMouseListener2(vista.getPanelActivos().getBtnCerrarSesion());
         configurarMouseListener(vista.getPanelActivos().getBtnCotizaciones());
         configurarMouseListener(vista.getPanelActivos().getBtnMisOperaciones());
@@ -89,9 +96,39 @@ public class Controlador {
 		vista.getPanelCompra().getBtnConvertir().addActionListener(new Convertir());
 		configurarMouseListener3(vista.getPanelCompra().getBtnConvertir());
 		
-		this.actualizarThread= new ActualizarThread();
-		actualizarThread.run();
+		
+		
     }
+	
+	 private class ActualizarTask extends TimerTask {
+	        private ApInfoCripto apInfoCripto;
+
+	        public ActualizarTask() {
+	            this.apInfoCripto = modelo.getApInfoCripto();
+	        }
+
+	        @Override
+	        public void run() {
+	            apInfoCripto.consultarPrecioCripto();
+	            if (apInfoCripto.getJson() != null) {
+	                modelo.getMonedaDAO().actualizarPrecio("BTC", apInfoCripto.getBTC());
+	                modelo.getMonedaDAO().actualizarPrecio("ETH", apInfoCripto.getETH());
+	                modelo.getMonedaDAO().actualizarPrecio("USDC", apInfoCripto.getUSDC());
+	                modelo.getMonedaDAO().actualizarPrecio("USDT", apInfoCripto.getUSDT());
+	                modelo.getMonedaDAO().actualizarPrecio("DOGE", apInfoCripto.getDOGE());
+
+	     
+	                SwingUtilities.invokeLater(() -> {
+	                    vista.getPanelCotizaciones().actualizarPrecioBTC(apInfoCripto.getBTC());
+	                    vista.getPanelCotizaciones().actualizarPrecioDOGE(apInfoCripto.getDOGE());
+	                    vista.getPanelCotizaciones().actualizarPrecioETH(apInfoCripto.getETH());
+	                    vista.getPanelCotizaciones().actualizarPrecioUSDT(apInfoCripto.getUSDT());
+	                    vista.getPanelCotizaciones().actualizarPrecioUSDC(apInfoCripto.getUSDC());
+	                });
+	            }
+	        }
+	    }
+
 	
 
     private void configurarMouseListener(javax.swing.JButton boton) {
@@ -170,7 +207,10 @@ public class Controlador {
 		public void actionPerformed(ActionEvent e) {
 			int respuesta = JOptionPane.showConfirmDialog(null, "¿Estás seguro que deseas salir?", "Confirmación", JOptionPane.YES_NO_OPTION);
 	        
-	        if (respuesta == JOptionPane.YES_OPTION) System.exit(0);
+	        if (respuesta == JOptionPane.YES_OPTION) {
+	        	System.exit(0);
+	        	DataBaseConnection.cerrarConexion();
+	        }
 		}
 	}
 	
@@ -346,7 +386,6 @@ public class Controlador {
 		public void actionPerformed(ActionEvent e) {
 			try {
 			    modelo.exportar();
-			    JOptionPane.showMessageDialog(vista.getPanelActivos(),"Datos exportados exitosamente.", "Exportación exitosa.", JOptionPane.PLAIN_MESSAGE);
 			} catch (IOException x) {
 			    JOptionPane.showMessageDialog(vista.getPanelActivos(),"Error con la exportación del archivo .csv, intente nuevamente.", "Error exportación.", JOptionPane.ERROR_MESSAGE);
 			}
@@ -356,71 +395,40 @@ public class Controlador {
 	}
 	public class BotonGenerarDatos implements ActionListener{
 		public void actionPerformed(ActionEvent e) {
-			/*cuando se toque este boton lo que tiene que pasar es que el stock de todas las monedas se ponga en aleatorio y la cantidad de todos los activos tambien se ponga en aleatorio*/
+			modelo.generarActivoFiat();
 			modelo.generarStock();
 			modelo.generarCantidad();
+			cargarPanelActivos();
 		}
-		
-		
 	}
 		
 		
 	
 	public void cargarPanelActivos() {
-		
-		List<ActivoCripto> activosCripto = modelo.listarActivoCripto();/*me tengo que traer los activos cripto de todo el usuario*/ 
-		List<ActivoFiat> activosFiat = modelo.listarActivoFiat();/*me tengo que traer los activos fiat de todo el usuario*/
-		List<Moneda> monedas = modelo.listarMonedas();/*me trae todas las monedas de la base de datos en un arrayList*/
+		vista.getPanelActivos().limpiarTabla();
+		List<ActivoCripto> activosCripto = modelo.listarActivoCripto(); 
+		List<ActivoFiat> activosFiat = modelo.listarActivoFiat();
+		List<Moneda> monedas = modelo.getMonedaDAO().traerMonedas();
 		
 		for (ActivoCripto ac : activosCripto) {
 			/*cada activo tengo que cargarlo en la tabla*/
-			vista.getPanelActivos().agregarFila(monedas.get(ac.getId()-1).getId(), monedas.get(ac.getId()-1).getNombre(), ac.getCantidad() * monedas.get(ac.getId()-1).getValorDolar());
+			vista.getPanelActivos().agregarFila(monedas.get(ac.getIdMoneda()-1).getId(), monedas.get(ac.getIdMoneda()-1).getNombre(), ac.getCantidad() * monedas.get(ac.getIdMoneda()-1).getValorDolar());
 		}
 		
 		for (ActivoFiat af : activosFiat) {
 			/*cada activo fiat tengo que cargarlo en la tabla*/
-			vista.getPanelActivos().agregarFila(monedas.get(af.getId()-1).getId(), monedas.get(af.getId()-1).getNombre(), af.getCantidad() * monedas.get(af.getId()-1).getValorDolar());
+			vista.getPanelActivos().agregarFila(monedas.get(af.getIdMoneda()-1).getId(), monedas.get(af.getIdMoneda()-1).getNombre(), af.getCantidad() * monedas.get(af.getIdMoneda()-1).getValorDolar());
 		}
 	}
 	public void cargarPanelMisOperaciones() {
-		
-		List<Transaccion> lista = modelo.getTransaccionDAO().actualizarTransacciones();/*tengo que ver que onda con lista, osea es un linkedlist?*/
+		/*tengo que limpiar el panel*/
+		vista.getPanelMisOperaciones().limpiarPanel();
+		List<Transaccion> lista = modelo.getTransaccionDAO().actualizarTransacciones(modelo.getUsuario().getId());/*devuelve una lista con las transacciones asociadas al usuario*/
 		for(Transaccion t: lista) {
 			vista.getPanelMisOperaciones().agregarCriptomoneda2(t.getResumen());
 			
 		}
 	}
-	public class ActualizarThread extends Thread {
-		private ApInfoCripto apInfoCripto;
-		
-		public ActualizarThread() {
-			this.apInfoCripto = modelo.getApInfoCripto();
-		}
-
-		@Override
-		public void run() {
-			apInfoCripto.consultarPrecioCripto();
-		    if (apInfoCripto.getJson() != null) {
-		    	modelo.getMonedaDAO().actualizarPrecio("BTC", apInfoCripto.getBTC());
-		    	modelo.getMonedaDAO().actualizarPrecio("ETH", apInfoCripto.getETH());
-		        modelo.getMonedaDAO().actualizarPrecio("USDC", apInfoCripto.getUSDC());
-		        modelo.getMonedaDAO().actualizarPrecio("USDT", apInfoCripto.getUSDT());
-		        modelo.getMonedaDAO().actualizarPrecio("DOGE", apInfoCripto.getDOGE());
-		        SwingUtilities.invokeLater(() -> {/*es donde cargo en la tabla de cotizaciones la informacion renovada*/
-		        	vista.getPanelCotizaciones().actualizarPrecioBTC(apInfoCripto.getBTC());
-		        	vista.getPanelCotizaciones().actualizarPrecioDOGE(apInfoCripto.getDOGE());
-		        	vista.getPanelCotizaciones().actualizarPrecioETH(apInfoCripto.getETH());
-		        	vista.getPanelCotizaciones().actualizarPrecioUSDT(apInfoCripto.getUSDT());
-		        	vista.getPanelCotizaciones().actualizarPrecioUSDC(apInfoCripto.getUSDC());
-		        });
-		            }
-
-		            try {
-		                TimeUnit.SECONDS.sleep(30);
-		            } catch (InterruptedException e) {
-		                e.printStackTrace();
-		            }
-		    }
-	}
+	
 }
 

@@ -7,7 +7,7 @@ import java.sql.SQLException;
 public class DataBaseConnection {
     private static DataBaseConnection instanciaUnica;
     private static Connection conexion;
-    private static final String URL = "jdbc:sqlite:src/basedatos.db";
+    private static final String URL = "jdbc:sqlite:basedatos.db";
 
     private DataBaseConnection() {/*establece la coneccion con la base de datos*/
         try {
